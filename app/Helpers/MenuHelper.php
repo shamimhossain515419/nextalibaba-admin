@@ -19,6 +19,7 @@ class MenuHelper
                 'name' => 'Inventory',
                 'subItems' => [
                     ['name' => 'Category', 'path' => '/dashboard/inventory/category'],
+                    ['name' => 'Products', 'path' => '/dashboard/inventory/product'],
                 ],
             ],
             [

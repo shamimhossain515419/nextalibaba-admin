@@ -1,22 +1,74 @@
 <?php
 
 use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified'
-])->group(function () {
-    // Dashboard
-    Route::get('/dashboard', fn() => view('pages.dashboard.ecommerce'))->name('dashboard');
+])
+    ->prefix('dashboard')
+    ->group(function () {
 
-    // Inventory - Category
-    Route::get('/dashboard/inventory/category', [ProductCategoryController::class, 'index'])->name('inventory.category.index');
-    Route::get('/dashboard/inventory/category/create-category', [ProductCategoryController::class, 'create'])->name('inventory.category.create');
-    Route::post('/dashboard/inventory/category', [ProductCategoryController::class, 'store'])->name('inventory.category.store');
+        // Dashboard
+        Route::get('/', fn () => view('pages.dashboard.ecommerce'))
+            ->name('dashboard');
 
-});
+        // Inventory - Category
+          Route::prefix('inventory/category')
+             ->name('inventory.category.')
+            ->group(function () {
+                Route::get('/', [ProductCategoryController::class, 'index'])
+                    ->name('index');
+
+                Route::get('/create-category', [ProductCategoryController::class, 'create'])
+                    ->name('create');
+
+                Route::get('/create-category/{id}', [ProductCategoryController::class, 'show'])
+                    ->name('edit');
+
+                Route::delete('/create-category/{id}', [ProductCategoryController::class, 'destroy'])
+                    ->name('destroy');
+
+                Route::post('/', [ProductCategoryController::class, 'store'])
+                    ->name('store');
+
+                Route::put('/{id}', [ProductCategoryController::class, 'update'])
+                    ->name('update');
+            });
+
+        // Inventory - Category
+        Route::prefix('inventory/product')
+            ->name('inventory.product.')
+            ->group(function () {
+                Route::get('/', [ProductController::class, 'index'])
+                    ->name('index');
+
+                Route::get('/create-product', [ProductController::class, 'create'])
+                    ->name('create');
+
+                Route::get('/create-product/{id}', [ProductController::class, 'show'])
+                    ->name('edit');
+
+                Route::delete('/create-product/{id}', [ProductController::class, 'destroy'])
+                    ->name('destroy');
+
+                Route::post('/', [ProductController::class, 'store'])
+                    ->name('store');
+
+                Route::put('/{id}', [ProductController::class, 'update'])
+                    ->name('update');
+
+            });
+
+        // product related api
+
+
+
+    });
+
 
 
 
