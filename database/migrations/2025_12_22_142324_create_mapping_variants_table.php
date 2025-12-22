@@ -11,20 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attributes', function (Blueprint $table) {
+        Schema::create('mapping_variants', function (Blueprint $table) {
             $table->id();
-            $table->string('name');   // Hand, Size, Country
-            $table->string('slug')->unique();
+            $table->foreignId('attribute_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('variant_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
-
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('attributes');
+        Schema::dropIfExists('mapping_variants');
     }
 };

@@ -60,7 +60,7 @@
                 <!-- Products Description Section -->
                 <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
                     <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
-                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">Prodcut Description</h2>
+                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">Product Description</h2>
                     </div>
                     <div class="p-4 sm:p-6 dark:border-gray-800">
                         <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -167,34 +167,25 @@
                 <!-- Products Images Section -->
                 <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
                     <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
-                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">Category Images</h2>
+                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">Product Images</h2>
                     </div>
                     <div class="p-4 sm:p-6">
-                        <label for="image"
-                               class="block cursor-pointer rounded-lg border-2 border-dashed border-gray-300 transition hover:border-blue-500 dark:border-gray-800">
-                            <div class="flex justify-center p-10">
-                                <div class="flex max-w-65 flex-col items-center gap-4">
-                                    <div
-                                        class="inline-flex h-13 w-13 items-center justify-center rounded-full border border-gray-200 text-gray-700 transition dark:border-gray-800 dark:text-gray-400">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                             viewBox="0 0 24 24" fill="none">
-                                            <path
-                                                d="M20.0004 16V18.5C20.0004 19.3284 19.3288 20 18.5004 20H5.49951C4.67108 20 3.99951 19.3284 3.99951 18.5V16M12.0015 4L12.0015 16M7.37454 8.6246L11.9994 4.00269L16.6245 8.6246"
-                                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round"></path>
-                                        </svg>
-                                    </div>
-                                    <p class="text-center text-sm text-gray-500 dark:text-gray-400">
-                                        <span
-                                            class="font-medium text-gray-800 dark:text-white/90">Click to upload</span>
-                                        or drag and drop
-                                        SVG, PNG, JPG or GIF (MAX. 800x400px)
-                                    </p>
-                                </div>
-                            </div>
-                            <input type="file" name="image" id="image" class="hidden" accept="image/*">
-                        </label>
+                        <div class="mb-4">
+
+                            <label for="images"
+                                   class="flex cursor-pointer items-center justify-center rounded border-2 border-dashed p-6">
+                                Click to upload images
+                                <input type="file" name="images[]" id="images" class="hidden" multiple accept="image/*">
+                            </label>
+
+                            {{-- Preview --}}
+                            <div id="preview" class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+                        </div>
                     </div>
+
+
+                    {{-- Multiple Images --}}
+
                 </div>
 
                 <!-- Buttons -->
@@ -208,5 +199,59 @@
         </form>
 
     </div>
+    {{-- Preview Script --}}
+    <script>
+        const imagesInput = document.getElementById('images');
+        const preview = document.getElementById('preview');
+
+        let selectedFiles = [];
+
+        imagesInput.addEventListener('change', function () {
+            selectedFiles = Array.from(this.files);
+            renderPreview();
+        });
+
+        function renderPreview() {
+            preview.innerHTML = '';
+
+            selectedFiles.forEach((file, index) => {
+                if (!file.type.startsWith('image/')) return;
+
+                const reader = new FileReader();
+
+                reader.onload = e => {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'relative';
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'h-32 w-full rounded object-cover border';
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.innerHTML = '&times;';
+                    removeBtn.className =
+                        'absolute top-1 right-1 h-6 w-6 rounded-full bg-red-600 text-white text-sm flex items-center justify-center hover:bg-red-700';
+
+                    removeBtn.onclick = () => removeImage(index);
+
+                    wrapper.appendChild(img);
+                    wrapper.appendChild(removeBtn);
+                    preview.appendChild(wrapper);
+                };
+
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function removeImage(index) {
+            selectedFiles.splice(index, 1);
+
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(file => dataTransfer.items.add(file));
+
+            imagesInput.files = dataTransfer.files;
+            renderPreview();
+        }
+    </script>
 
 @endsection

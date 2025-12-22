@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\VariantController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([
@@ -49,6 +51,12 @@ Route::middleware([
                 Route::get('/create-product', [ProductController::class, 'create'])
                     ->name('create');
 
+                Route::get('/variant/{id}', [ProductController::class, 'variant'])
+                    ->name('variant');
+
+                Route::post('/variant/store', [ProductController::class, 'variantStore'])
+                    ->name('variantStore');
+
                 Route::get('/create-product/{id}', [ProductController::class, 'show'])
                     ->name('edit');
 
@@ -63,7 +71,52 @@ Route::middleware([
 
             });
 
-        // product related api
+        // Variant related api
+
+        Route::prefix('variants')
+            ->name('variants.')
+            ->group(function () {
+                Route::get('/', [VariantController::class, 'index'])
+                    ->name('index');
+
+                Route::get('/create', [VariantController::class, 'create'])
+                    ->name('create');
+
+                Route::get('/{id}', [VariantController::class, 'show'])
+                    ->name('edit');
+
+                Route::delete('/{id}', [VariantController::class, 'destroy'])
+                    ->name('destroy');
+
+                Route::post('/', [VariantController::class, 'store'])
+                    ->name('store');
+
+                Route::put('/{id}', [VariantController::class, 'update'])
+                    ->name('update');
+
+            });
+
+        Route::prefix('attributes')
+            ->name('attributes.')
+            ->group(function () {
+                Route::get('/', [AttributeController::class, 'index'])
+                    ->name('index');
+
+                Route::get('/create', [AttributeController::class, 'create'])
+                    ->name('create');
+
+                Route::get('/{id}', [AttributeController::class, 'show'])
+                    ->name('edit');
+
+                Route::delete('/{id}', [AttributeController::class, 'destroy'])
+                    ->name('destroy');
+
+                Route::post('/', [AttributeController::class, 'store'])
+                    ->name('store');
+
+                Route::put('/{id}', [AttributeController::class, 'update'])
+                    ->name('update');
+            });
 
 
 

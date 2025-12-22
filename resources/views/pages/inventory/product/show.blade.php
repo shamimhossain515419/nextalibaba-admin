@@ -80,7 +80,7 @@
                     <tr class="border-b border-gray-200 dark:divide-gray-800 dark:border-gray-800">
 
                         <th class="cursor-pointer px-5 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400"
-                            >
+                        >
                             <div class="flex items-center gap-3">
                                 <p class="text-theme-xs font-medium text-gray-500 dark:text-gray-400">
                                     Products
@@ -89,7 +89,7 @@
                             </div>
                         </th>
                         <th class="cursor-pointer px-5 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400"
-                            >
+                        >
                             <div class="flex items-center gap-3">
                                 <p class="text-theme-xs font-medium text-gray-500 dark:text-gray-400">
                                     Sku
@@ -148,8 +148,8 @@
                             <td class="px-5 py-4 whitespace-nowrap">
                                 <div class="flex items-center gap-3">
                                     <div class="h-12 w-12">
-                                        <img :src="product.image" class="h-12 w-12 rounded-md" alt=""
-                                             src="{{ asset('/storage/'.$product->primaryImage->image) }}">
+                                        <img class="h-12 w-12 rounded-md" alt=""
+                                             src="{{ asset('storage/'.$product->primaryImage->image) }}">
                                     </div>
                                     <span class="text-sm font-medium text-gray-700 dark:text-gray-400">{{$product->name}}r</span>
                                 </div>
@@ -169,13 +169,22 @@
                                 <p class="text-sm text-gray-700 dark:text-gray-400">{{$product->base_price}}</p>
                             </td>
                             <td class="px-5 py-4 whitespace-nowrap">
-                                <span class="text-theme-xs rounded-full px-2 py-0.5 font-medium
-                                    {{ $product->has_variant === 1
-                                        ? 'bg-success-50 dark:bg-success-500/15 text-success-700 dark:text-success-500'
-                                        : 'bg-red-50 text-red-700 dark:bg-red-500/15 dark:text-red-500' }}">
-                                    {{ $product->has_variant === 1 ? 'Variant' : 'Unvariant' }}
-                                </span>
+                                @if($product->has_variant === 1)
+                                    <div
+                                        class="text-theme-xs rounded-full px-2 py-0.5 font-medium
+            bg-success-50 dark:bg-success-500/15 text-success-700 dark:text-success-500">
+                                        Variant
+                                    </div>
+                                @else
+                                    <a href="{{ route('inventory.product.variant', $product->id) }}"
+                                       class="text-theme-xs inline-flex rounded-full px-3 py-1 font-medium
+           bg-red-50 text-blue-700 hover:bg-red-100
+           dark:bg-red-500/15 dark:text-blue-500 dark:hover:bg-red-500/25">
+                                        Edit
+                                    </a>
+                                @endif
                             </td>
+
 
                             <td class="px-5 py-4 whitespace-nowrap">
                                 <span class="text-theme-xs rounded-full px-2 py-0.5 font-medium

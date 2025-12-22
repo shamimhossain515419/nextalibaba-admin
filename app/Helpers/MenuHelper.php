@@ -16,11 +16,23 @@ class MenuHelper
             ],
             [
                 'icon' => 'dashboard',
-                'name' => 'Inventory',
-                'subItems' => [
-                    ['name' => 'Category', 'path' => '/dashboard/inventory/category'],
-                    ['name' => 'Products', 'path' => '/dashboard/inventory/product'],
-                ],
+                'name' => 'Category',
+                'path' => '/dashboard/inventory/category',
+            ],
+            [
+                'icon' => 'dashboard',
+                'name' => 'Products',
+                'path' => '/dashboard/inventory/product',
+            ],
+            [
+                'icon' => 'dashboard',
+                'name' => 'Variants',
+                'path' => '/dashboard/variants',
+            ],
+            [
+                'icon' => 'dashboard',
+                'name' => 'Attributes',
+                'path' => '/dashboard/attributes',
             ],
             [
                 'icon' => 'calendar',
