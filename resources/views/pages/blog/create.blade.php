@@ -4,7 +4,7 @@
     <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white/90">
-                Add Product
+                Add Blog
             </h2>
             <nav>
                 <!-- Success message -->
@@ -43,8 +43,8 @@
                     </li>
                     <li>
                         <a class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400"
-                           href={{route("inventory.product.index")}}>
-                            Category
+                           href={{route("blogs.index")}}>
+                            Blog
                             <svg class="stroke-current" width="17" height="16" viewBox="0 0 17 16" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6.0765 12.667L10.2432 8.50033L6.0765 4.33366" stroke="" stroke-width="1.2"
@@ -53,38 +53,35 @@
                         </a>
                     </li>
                     <li class="text-sm text-gray-800 dark:text-white/90">
-                        Add Product
+                        Add Blog
                     </li>
                 </ol>
             </nav>
         </div>
-        <form action="{{ route('inventory.product.update',$product->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('blogst.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            @method('patch')
             <input type="hidden" autocomplete="off">
             <div class="space-y-6">
                 <!-- Products Description Section -->
                 <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
                     <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
-                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">Product Description</h2>
+                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">Blog Description</h2>
                     </div>
                     <div class="p-4 sm:p-6 dark:border-gray-800">
                         <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
                             <div>
                                 <label for="name"
-                                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Product
-                                    Name</label>
-                                <input type="text" name="name"
-                                       value="{{ old('name', $product->name) }}"
+                                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Blog
+                                    title</label>
+                                <input type="text" name="title"
                                        class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                                       placeholder="Enter product name" required>
+                                       placeholder="Enter title " required>
                             </div>
                             <div>
                                 <label for="sku"
                                        class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Product
                                     SKU</label>
                                 <input type="text" id="sku" name="sku"
-                                       value="{{ old('sku', $product->sku) }}"
                                        class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                                        placeholder="Enter product name" required>
                             </div>
@@ -101,9 +98,8 @@
                                             Select Category
                                         </option>
 
-                                        @foreach($categories as $category)
-                                            <option  value="{{ $category->id }}"
-                                                {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                        @foreach($blogCategory as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
                                         @endforeach
                                     </select>
                                     <span
@@ -121,7 +117,6 @@
                                        class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Product
                                     Price</label>
                                 <input type="number" id="base_price" name="base_price"
-                                       value="{{ old('base_price', $product->base_price) }}"
                                        class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                                        placeholder="Enter Price" required>
                             </div>
@@ -130,7 +125,6 @@
                                 <label for="stock"
                                        class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Stock</label>
                                 <input type="number" id="stock" name="stock"
-                                       value="{{ old('stock', $product->stock) }}"
                                        class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                                        placeholder="Enter stock" required>
                             </div>
@@ -139,16 +133,15 @@
                                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                                     Description
                                 </label>
-                                <textarea name="description" placeholder="Description (optional)" type="text" rows="5"
-
+                                <textarea name="description" placeholder="Description (optional)" type="text" rows="7"
                                           class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 w-full resize-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                                          spellcheck="false">{{ old('description', $product->description) }}</textarea>
+                                          spellcheck="false"></textarea>
                             </div>
 
                             <div x-data="{ checkboxToggle: false }">
                                 <label for="checkboxLabelOne" class="flex cursor-pointer items-center text-sm font-medium text-gray-700 select-none dark:text-gray-400">
                                     <div class="relative">
-                                        <input {{ old('has_variant', $product->has_variant) ? 'checked' : '' }} type="checkbox" name="has_variant" id="checkboxLabelOne" class="sr-only" @change="checkboxToggle = !checkboxToggle">
+                                        <input type="checkbox" name="has_variant" id="checkboxLabelOne" class="sr-only" @change="checkboxToggle = !checkboxToggle">
                                         <div :class="checkboxToggle ? 'border-brand-500 bg-brand-500' : 'bg-transparent border-gray-300 dark:border-gray-700'" class="f hover:border-brand-500 dark:hover:border-brand-500 mr-3 flex h-5 w-5 items-center justify-center rounded-md border-[1.25px] border-brand-500 bg-brand-500">
                               <span :class="checkboxToggle ? '' : 'opacity-0'" class="">
                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -163,7 +156,7 @@
                             <div x-data="{ switcherToggle: false }">
                                 <label for="toggle2" class="flex cursor-pointer items-center gap-3 text-sm font-medium text-gray-700 select-none dark:text-gray-400">
                                     <div class="relative">
-                                        <input type="checkbox" {{ old('status', $product->status) ? 'checked' : '' }}  name="status" id="toggle2" class="sr-only" @change="switcherToggle = !switcherToggle">
+                                        <input type="checkbox"  name="status" id="toggle2" class="sr-only" @change="switcherToggle = !switcherToggle">
                                         <div class="block h-6 w-11 rounded-full bg-brand-500 dark:bg-brand-500" :class="switcherToggle ? 'bg-brand-500 dark:bg-brand-500' : 'bg-gray-200 dark:bg-white/10'"></div>
                                         <div :class="switcherToggle ? 'translate-x-full': 'translate-x-0'" class="shadow-theme-sm absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white duration-300 ease-linear translate-x-full"></div>
                                     </div>
@@ -189,40 +182,6 @@
                                 Click to upload images
                                 <input type="file" name="images[]" id="images" class="hidden" multiple accept="image/*">
                             </label>
-
-                            <!-- Existing Images -->
-                            @if($productImages->count())
-                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                                    @foreach($productImages as $img)
-                                        <div class="relative group" id="image-{{ $img->id }}">
-
-                                            <img src="{{ asset('storage/'.$img->image) }}"
-                                                 class="h-32 w-full object-cover rounded border">
-
-                                            {{-- DELETE --}}
-                                            <button onclick="deleteImage({{ $img->id }})"
-                                                    class="absolute top-1 right-1 bg-red-600 text-white h-6 w-6 rounded-full text-xs
-                       hidden group-hover:flex items-center justify-center">
-                                                ✕
-                                            </button>
-
-                                            {{-- PRIMARY --}}
-                                            @if(!$img->is_primary)
-                                                    <button onclick="setPrimary({{ $img->id }})"
-                                                        class="absolute bottom-1 right-1 bg-blue-600 text-white text-xs px-2 py-1 rounded
-                           hidden group-hover:block">
-                                                    Set Primary
-                                                </button>
-                                            @else
-                                                <span class="absolute bottom-1 left-1 bg-green-600 text-white text-xs px-2 rounded">
-                    Primary
-                </span>
-                                            @endif
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endif
-
 
                             {{-- Preview --}}
                             <div id="preview" class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4"></div>
@@ -297,40 +256,6 @@
 
             imagesInput.files = dataTransfer.files;
             renderPreview();
-        }
-
-        function deleteImage(id) {
-            if (!confirm('Delete this image?')) return;
-
-            fetch(`/dashboard/inventory/product/destroy-image/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                }
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById(`image-${id}`).remove();
-                    }
-                });
-        }
-
-        function setPrimary(id) {
-            fetch(`/dashboard/inventory/product/set-primary/${id}`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                }
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload(); // refresh to update primary badge
-                    }
-                });
         }
     </script>
 

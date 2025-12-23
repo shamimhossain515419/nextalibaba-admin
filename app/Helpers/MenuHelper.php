@@ -35,6 +35,31 @@ class MenuHelper
                 'path' => '/dashboard/attributes',
             ],
             [
+                'icon' => 'dashboard',
+                'name' => 'Features Categories',
+                'path' => '/dashboard/features-category',
+            ],
+            [
+                'icon' => 'dashboard',
+                'name' => 'Mapping Products',
+                'path' => '/dashboard/mapping-products',
+            ],
+            [
+                'icon' => 'dashboard',
+                'name' => 'Today Hot Deal',
+                'path' => '/dashboard/today-hot-deal',
+            ],
+            [
+                'icon' => 'dashboard',
+                'name' => 'Blog Category',
+                'path' => '/dashboard/blog-category',
+            ],
+            [
+                'icon' => 'dashboard',
+                'name' => 'Blogs',
+                'path' => '/dashboard/blogs',
+            ],
+            [
                 'icon' => 'calendar',
                 'name' => 'Calendar',
                 'path' => '/calendar',

@@ -36,6 +36,13 @@ class AttributeController extends Controller
             'variant_id' => 'required|exists:variants,id',
         ]);
 
+        $existing =  Attribute::where("name", $request->name)->where("variant_id",$request->variant_id)->first();
+        if($existing){
+            return redirect()->route('attributes.create')->with('error', 'Attribute already exists.');
+        }
+
+
+
         Attribute::create([
             'name'       => $request->name,
             'variant_id' => $request->variant_id,

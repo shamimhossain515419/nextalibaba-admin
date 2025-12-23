@@ -13,6 +13,11 @@
                         {{ session('success') }}
                     </div>
                 @endif
+                @if(session('error'))
+                    <div class="mb-4 rounded-lg bg-red-100 p-4 text-red-800">
+                        {{ session('error') }}
+                    </div>
+                @endif
 
                 <!-- Error messages -->
                 @if($errors->any())

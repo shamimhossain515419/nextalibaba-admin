@@ -3,52 +3,52 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attribute;
+use App\Models\Blog;
+use App\Http\Controllers\Controller;
+use App\Models\BlogCategory;
 use App\Models\MappingVariant;
 use App\Models\Product;
-use Illuminate\Support\Facades\File;
 use App\Models\ProductCategory;
 use App\Models\ProductImage;
-use App\Models\User;
 use App\Models\Variant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class ProductController extends Controller
+class BlogController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $query = Product::with(['category','primaryImage']);
+        $query = Blog::with(['category']);
 
         // Add search functionality
         if ($request->has('search') && !empty($request->search)) {
             $searchTerm = $request->search;
             $query->where(function($q) use ($searchTerm) {
                 $q->where('name', 'LIKE', '%' . $searchTerm . '%')
-                    ->orWhere('sku', 'LIKE', '%' . $searchTerm . '%');
+                    ->orWhere('content', 'LIKE', '%' . $searchTerm . '%');
             });
         }
 
         // Apply pagination
-        $products = $query->paginate(15); // Default is 15 items per page
+        $blogs = $query->paginate(15); // Default is 15 items per page
 
         // Preserve search term in pagination links
         if ($request->has('search')) {
-            $products->appends(['search' => $request->search]);
+            $blogs->appends(['search' => $request->search]);
         }
 
-        return view('pages.inventory.product.show', compact('products'));
+        return view('pages.blog.show', compact('blogs'));
     }
 
     public function create()
     {
-        $categories = ProductCategory::all();
-        $variants = Variant::all();
-        $attributes = Attribute::all();
-        return view('pages.inventory.product.create', compact('categories','variants','attributes'));
+        $blogCategory = BlogCategory::all();
+        return view('pages.blog.create', compact('blogCategory',));
     }
 
 
@@ -99,82 +99,6 @@ class ProductController extends Controller
     }
 
 
-    public function variantStore(Request $request)
-    {
-        DB::beginTransaction();
-        try {
-
-            // Check if the variant mapping already exists
-            $exists = MappingVariant::where('product_id', $request->product_id)
-                ->where('variant_id', $request->variant_id)
-                ->where('attribute_id', $request->attribute_id)
-                ->first();
-
-            if ($exists) {
-                return redirect()->back()
-                    ->with('error', 'This variant attribute already exists for this product.')
-                    ->withInput();
-            }
-
-            // If not exists, create new record
-            MappingVariant::create([
-                'product_id' => $request->product_id,
-                'variant_id' => $request->variant_id,
-                'attribute_id' => $request->attribute_id,
-            ]);
-
-            DB::commit();
-            return redirect()->back()
-                ->with('success', 'Variant added successfully!');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
-    public function variantUpdate(Request $request, $id)
-    {
-        $request->validate([
-            'variant_id' => 'required',
-            'attribute_id' => 'required',
-            'product_id' => 'required',
-        ]);
-
-        DB::beginTransaction();
-        try {
-            // ডুপ্লিকেট চেক (নিজের আইডি বাদে অন্য কোথাও একই কম্বিনেশন আছে কিনা)
-            $exists = MappingVariant::where('product_id', $request->product_id)
-                ->where('variant_id', $request->variant_id)
-                ->where('attribute_id', $request->attribute_id)
-                ->where('id', '!=', $id)
-                ->first();
-
-            if ($exists) {
-                return redirect()->back()
-                    ->with('error', 'This combination already exists.')
-                    ->withInput();
-            }
-
-            $mapping = MappingVariant::findOrFail($id);
-            $mapping->update([
-                'variant_id' => $request->variant_id,
-                'attribute_id' => $request->attribute_id,
-            ]);
-
-            DB::commit();
-            return redirect()->back()->with('success', 'Variant updated successfully!');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', 'Something went wrong!');
-        }
-    }
-
-    public function getAttributesByVariant($variantId)
-    {
-        // তোমার Attribute টেবিলে যদি variant_id কলাম থাকে তবেই এটা কাজ করবে
-        $attributes = Attribute::where('variant_id', $variantId)->get();
-        return response()->json($attributes);
-    }
 
     public function variant($id)
     {

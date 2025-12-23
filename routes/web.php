@@ -1,8 +1,13 @@
 <?php
 
 use App\Http\Controllers\AttributeController;
+use App\Http\Controllers\BlogCategoryController;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\FeaturesCategoryController;
+use App\Http\Controllers\FeaturesProductController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TodayHotDealController;
 use App\Http\Controllers\VariantController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,12 +20,12 @@ Route::middleware([
     ->group(function () {
 
         // Dashboard
-        Route::get('/', fn () => view('pages.dashboard.ecommerce'))
+        Route::get('/', fn() => view('pages.dashboard.ecommerce'))
             ->name('dashboard');
 
         // Inventory - Category
-          Route::prefix('inventory/category')
-             ->name('inventory.category.')
+        Route::prefix('inventory/category')
+            ->name('inventory.category.')
             ->group(function () {
                 Route::get('/', [ProductCategoryController::class, 'index'])
                     ->name('index');
@@ -66,10 +71,26 @@ Route::middleware([
                 Route::post('/', [ProductController::class, 'store'])
                     ->name('store');
 
-                Route::put('/{id}', [ProductController::class, 'update'])
+                Route::patch('/{id}', [ProductController::class, 'update'])
                     ->name('update');
+                Route::delete('variant/{id}', [ProductController::class, 'destroyVariant'])
+                    ->name('destroyVariant');
+
+                Route::put('variant/{id}', [ProductController::class, 'variantUpdate'])
+                    ->name('variantUpdate');
+
+                Route::get('get-attributes/{variantId}', [ProductController::class, 'getAttributesByVariant'])
+                    ->name('inventory.product.getAttributes');
+
+                Route::delete('destroy-image/{id}', [ProductController::class, 'destroyImage'])
+                    ->name('destroyImage');
+
+                Route::post('set-primary/{id}', [ProductController::class, 'setPrimary'])
+                    ->name('primary');
 
             });
+
+
 
         // Variant related api
 
@@ -119,10 +140,119 @@ Route::middleware([
             });
 
 
+        Route::prefix('features-category')
+            ->name('features.category.')
+            ->group(function () {
+                Route::get('/', [FeaturesCategoryController::class, 'index'])
+                    ->name('index');
+
+                Route::get('/create', [FeaturesCategoryController::class, 'create'])
+                    ->name('create');
+
+                Route::get('/{id}', [FeaturesCategoryController::class, 'show'])
+                    ->name('edit');
+
+                Route::delete('/{id}', [FeaturesCategoryController::class, 'destroy'])
+                    ->name('destroy');
+
+                Route::post('/', [FeaturesCategoryController::class, 'store'])
+                    ->name('store');
+
+                Route::put('/{id}', [FeaturesCategoryController::class, 'update'])
+                    ->name('update');
+            });
+
+
+        Route::prefix('mapping-products')
+            ->name('mapping.product.')
+            ->group(function () {
+                Route::get('/', [FeaturesProductController::class, 'index'])
+                    ->name('index');
+
+                Route::get('/create', [FeaturesProductController::class, 'create'])
+                    ->name('create');
+
+                Route::get('/{id}', [FeaturesProductController::class, 'show'])
+                    ->name('edit');
+
+                Route::delete('/{id}', [FeaturesProductController::class, 'destroy'])
+                    ->name('destroy');
+
+                Route::post('/', [FeaturesProductController::class, 'store'])
+                    ->name('store');
+
+                Route::put('/{id}', [FeaturesProductController::class, 'update'])
+                    ->name('update');
+            });
+
+        Route::prefix('today-hot-deal')
+            ->name('todayHotDeal.')
+            ->group(function () {
+                Route::get('/', [TodayHotDealController::class, 'index'])
+                    ->name('index');
+
+                Route::get('/create', [TodayHotDealController::class, 'create'])
+                    ->name('create');
+
+                Route::get('/{id}', [TodayHotDealController::class, 'show'])
+                    ->name('edit');
+
+                Route::delete('/{id}', [TodayHotDealController::class, 'destroy'])
+                    ->name('destroy');
+
+                Route::post('/', [TodayHotDealController::class, 'store'])
+                    ->name('store');
+
+                Route::put('/{id}', [TodayHotDealController::class, 'update'])
+                    ->name('update');
+            });
+
+
+        Route::prefix('blog-category')
+            ->name('blogCategory.')
+            ->group(function () {
+                Route::get('/', [BlogCategoryController::class, 'index'])
+                    ->name('index');
+
+                Route::get('/create', [BlogCategoryController::class, 'create'])
+                    ->name('create');
+
+                Route::get('/{id}', [BlogCategoryController::class, 'show'])
+                    ->name('edit');
+
+                Route::delete('/{id}', [BlogCategoryController::class, 'destroy'])
+                    ->name('destroy');
+
+                Route::post('/', [BlogCategoryController::class, 'store'])
+                    ->name('store');
+
+                Route::put('/{id}', [BlogCategoryController::class, 'update'])
+                    ->name('update');
+
+            });
+
+        Route::prefix('blogs')
+            ->name('blogs.')
+            ->group(function () {
+                Route::get('/', [BlogController::class, 'index'])
+                    ->name('index');
+                Route::get('/create', [BlogController::class, 'create'])
+                    ->name('create');
+
+                Route::get('/{id}', [BlogController::class, 'show'])
+                    ->name('edit');
+                Route::post('/', [BlogController::class, 'store'])
+                    ->name('store');
+                Route::patch('/{id}', [BlogController::class, 'update'])
+                    ->name('update');
+                Route::delete('/{id}', [BlogController::class, 'destroy'])
+                    ->name('destroy');
+
+
+
+            });
 
     });
-
-
 
 
 // dashboard pages

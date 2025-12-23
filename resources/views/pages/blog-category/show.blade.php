@@ -4,7 +4,7 @@
     <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white/90">
-                All Product
+                All Blog Category
             </h2>
             <nav>
                 <ol class="flex items-center gap-1.5">
@@ -20,7 +20,7 @@
                         </a>
                     </li>
                     <li class="text-sm text-gray-800 dark:text-white/90">
-                        All Products
+                        All Blog Category
                     </li>
                 </ol>
             </nav>
@@ -32,26 +32,24 @@
             </div>
         @endif
 
-        <div
-            class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
-            <div
-                class="flex flex-col justify-between gap-5 border-b border-gray-200 px-5 py-4 sm:flex-row sm:items-center dark:border-gray-800">
+        <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+            <div class="flex flex-col justify-between gap-5 border-b border-gray-200 px-5 py-4 sm:flex-row sm:items-center dark:border-gray-800">
                 <div>
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
-                        Product List
+                        Blog Category List
                     </h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
                         Track your store's progress to boost your sales.
                     </p>
                 </div>
                 <div class="flex gap-3">
-                    <a href="{{ route('inventory.product.create') }}"
+                    <a href="{{ route('blogCategory.create') }}"
                        class="bg-brand-500 shadow-theme-xs hover:bg-brand-600 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-white transition">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M5 10.0002H15.0006M10.0002 5V15.0006" stroke="currentColor" stroke-width="1.5"
                                   stroke-linecap="round" stroke-linejoin="round"></path>
                         </svg>
-                        Add Product
+                        Add Blog Category
                     </a>
                 </div>
             </div>
@@ -78,128 +76,23 @@
                 <table class="w-full table-auto">
                     <thead>
                     <tr class="border-b border-gray-200 dark:divide-gray-800 dark:border-gray-800">
-
-                        <th class="cursor-pointer px-5 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400"
-                        >
-                            <div class="flex items-center gap-3">
-                                <p class="text-theme-xs font-medium text-gray-500 dark:text-gray-400">
-                                    Products
-                                </p>
-
-                            </div>
-                        </th>
-                        <th class="cursor-pointer px-5 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400"
-                        >
-                            <div class="flex items-center gap-3">
-                                <p class="text-theme-xs font-medium text-gray-500 dark:text-gray-400">
-                                    Sku
-                                </p>
-
-                            </div>
-                        </th>
-                        <th class="cursor-pointer px-5 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400"
-                        >
-                            <div class="flex items-center gap-3">
-                                <p class="text-theme-xs font-medium text-gray-500 dark:text-gray-400">
-                                    Category
-                                </p>
-
-                            </div>
-                        </th>
-                        <th class="cursor-pointer px-5 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400"
-                            @click="sortBy('brand')">
-                            <div class="flex items-center gap-3">
-                                <p class="text-theme-xs font-medium text-gray-500 dark:text-gray-400">
-                                    Stock
-                                </p>
-
-                            </div>
-                        </th>
-                        <th class="cursor-pointer px-5 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400"
-                            @click="sortBy('price')">
-                            <div class="flex items-center gap-3">
-                                <p class="text-theme-xs font-medium text-gray-500 dark:text-gray-400">
-                                    Price
-                                </p>
-
-                            </div>
-                        </th>
                         <th class="px-5 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
-                            Is Variant
+                             Name
                         </th>
-                        <th class="px-5 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
-                            Status
-                        </th>
-                        <th class="px-5 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
-                            Created At
-                        </th>
-
-                        <th class="px-5 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
-                            <div class="relative">
-                                <span class="sr-only">Action</span>
-                            </div>
+                        <th class="px-5 py-4  text-center text-xs font-medium text-gray-500 dark:text-gray-400">
+                            Action
                         </th>
                     </tr>
                     </thead>
                     <tbody class="divide-x divide-y divide-gray-200 dark:divide-gray-800" id="categoryTableBody">
-                    @forelse($products as $product)
+                    @forelse($categories as $item)
                         <tr class="transition hover:bg-gray-50 dark:hover:bg-gray-900 category-row">
 
                             <td class="px-5 py-4 whitespace-nowrap">
-                                <div class="flex items-center gap-3">
-                                    <div class="h-12 w-12">
-                                        <img class="h-12 w-12 rounded-md" alt=""
-                                             src="{{ asset('storage/'.$product->primaryImage->image) }}">
-                                    </div>
-                                    <span class="text-sm font-medium text-gray-700 dark:text-gray-400">{{$product->name}}r</span>
-                                </div>
+                                    <span class="text-sm font-medium text-gray-700 dark:text-gray-400">
+                                        {{ $item->name }}
+                                    </span>
                             </td>
-                            <td class="px-5 py-4 whitespace-nowrap">
-                                <p class="text-sm text-gray-500 dark:text-gray-400">
-                                    {{$product->sku}}</p>
-                            </td>
-                            <td class="px-5 py-4 whitespace-nowrap">
-                                <p class="text-sm text-gray-500 dark:text-gray-400">
-                                    {{$product->category->name}}</p>
-                            </td>
-                            <td class="px-5 py-4 whitespace-nowrap">
-                                <p class="text-sm text-gray-700 dark:text-gray-400">{{$product->stock}}</p>
-                            </td>
-                            <td class="px-5 py-4 whitespace-nowrap">
-                                <p class="text-sm text-gray-700 dark:text-gray-400">{{$product->base_price}}</p>
-                            </td>
-                            <td class="px-5 py-4 whitespace-nowrap">
-                                @if($product->has_variant === 1)
-                                    <div
-                                        class="text-theme-xs rounded-full px-2 py-0.5 font-medium
-                              bg-success-50 dark:bg-success-500/15 text-success-700 dark:text-success-500">
-                                        Variant
-                                    </div>
-                                @else
-                                    <a href="{{ route('inventory.product.variant', $product->id) }}"
-                                       class="text-theme-xs inline-flex rounded-full px-3 py-1 font-medium
-                             bg-red-50 text-blue-700 hover:bg-red-100
-                                dark:bg-red-500/15 dark:text-blue-500 dark:hover:bg-red-500/25">
-                                        Edit
-                                    </a>
-                                @endif
-                            </td>
-
-
-                            <td class="px-5 py-4 whitespace-nowrap">
-                                <span class="text-theme-xs rounded-full px-2 py-0.5 font-medium
-                                    {{ $product->status == 1
-                                        ? 'bg-success-50 dark:bg-success-500/15 text-success-700 dark:text-success-500'
-                                        : 'bg-red-50 text-red-700 dark:bg-red-500/15 dark:text-red-500' }}">
-                                    {{ $product->status == 1 ? 'Active' : 'Inactive' }}
-                                </span>
-                            </td>
-                            <td class="px-5 py-4 whitespace-nowrap">
-                                <p class="text-sm text-gray-700 dark:text-gray-400">
-                                    {{ $product->created_at->format('d M, Y') }}
-                                </p>
-                            </td>
-
                             <td class="px-5 py-4 whitespace-nowrap">
                                 <div class="relative flex justify-center">
                                     <button class="text-gray-500 dark:text-gray-400 dropdown-trigger">
@@ -210,16 +103,12 @@
                                                   fill=""></path>
                                         </svg>
                                     </button>
-                                    <div
-                                        class="dropdown-menu shadow-theme-lg fixed w-40 space-y-1 rounded-2xl border border-gray-200 bg-white p-2 dark:border-gray-800 dark:bg-gray-800"
-                                        style="display: none;">
-                                        <a href="{{ route('inventory.product.edit', $product->id) }}"
+                                    <div class="dropdown-menu shadow-theme-lg fixed w-40 space-y-1 rounded-2xl border border-gray-200 bg-white p-2 dark:border-gray-800 dark:bg-gray-800" style="display: none;">
+                                        <a href="{{ route('blogCategory.edit', $item->id) }}"
                                            class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
                                             Edit
                                         </a>
-                                        <form action="{{ route('inventory.product.destroy', $product->id) }}"
-                                              method="POST"
-                                              onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                        <form action="{{ route('blogCategory.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this   Blog Category?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
@@ -234,7 +123,7 @@
                     @empty
                         <tr>
                             <td colspan="3" class="px-5 py-8 text-center">
-                                <p class="text-sm text-gray-500 dark:text-gray-400">No categories found.</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">No variants found.</p>
                             </td>
                         </tr>
                     @endforelse
@@ -246,7 +135,7 @@
 
     <script>
         // Dropdown functionality
-        document.addEventListener('click', function (e) {
+        document.addEventListener('click', function(e) {
             if (e.target.closest('.dropdown-trigger')) {
                 const dropdown = e.target.closest('.dropdown-trigger').nextElementSibling;
                 dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
@@ -258,7 +147,7 @@
         });
 
         // Search functionality
-        document.getElementById('searchInput').addEventListener('input', function (e) {
+        document.getElementById('searchInput').addEventListener('input', function(e) {
             const searchTerm = e.target.value.toLowerCase();
             const rows = document.querySelectorAll('.category-row');
 
