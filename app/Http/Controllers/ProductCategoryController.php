@@ -17,6 +17,18 @@ class ProductCategoryController extends Controller
         $categories = ProductCategory::all();
         return view('pages.inventory.category.show', compact('categories'));
     }
+    public function indexWebView()
+    {
+        $categories = ProductCategory::all();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Product categories fetched successfully',
+            'data' => $categories
+        ], 200);
+    }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -27,7 +39,7 @@ class ProductCategoryController extends Controller
             // 1️⃣ Validate input
             $request->validate([
                 'name' => 'required|string|max:255|unique:product_categories,name',
-                'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
+                'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg,webp|max:2048',
             ]);
 
             // 2️⃣ Handle photo upload
@@ -81,7 +93,7 @@ class ProductCategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
         $category = ProductCategory::findOrFail($id);

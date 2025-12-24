@@ -20,7 +20,6 @@ class Product extends Model
     }
 
 
-
     // Product belongs to many categories
     public function category() {
         return $this->belongsTo(ProductCategory::class, 'category_id');
@@ -38,6 +37,12 @@ class Product extends Model
     // Optional: get only the primary image
     public function primaryImage() {
         return $this->hasOne(ProductImage::class, 'product_id')->where('is_primary', 1);
+    }
+    public function mainTwoImages()
+    {
+        return $this->hasMany(ProductImage::class, 'product_id')
+            ->orderByDesc('is_primary') // primary first
+            ->limit(2);
     }
 
 }

@@ -243,7 +243,7 @@ Route::middleware([
                     ->name('edit');
                 Route::post('/', [BlogController::class, 'store'])
                     ->name('store');
-                Route::patch('/{id}', [BlogController::class, 'update'])
+                Route::put('/{id}', [BlogController::class, 'update'])
                     ->name('update');
                 Route::delete('/{id}', [BlogController::class, 'destroy'])
                     ->name('destroy');

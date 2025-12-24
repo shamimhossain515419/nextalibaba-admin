@@ -51,6 +51,19 @@ class ProductController extends Controller
         return view('pages.inventory.product.create', compact('categories','variants','attributes'));
     }
 
+    public function getProductByCategory(Request $request)
+    {
+        $slug = $request->slug;
+        $productCategory= ProductCategory::where('slug', $slug)->first();
+        $products = Product::with('mainTwoImages')->where('category_id', $productCategory->id)->paginate(15);
+        return response()->json([
+            'success' => true,
+            'message' => 'Get product category wise fetched successfully',
+            'data' => $products
+        ], 200);
+    }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -93,7 +106,6 @@ class ProductController extends Controller
                 ->with('success', 'Product added successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());
         }
     }

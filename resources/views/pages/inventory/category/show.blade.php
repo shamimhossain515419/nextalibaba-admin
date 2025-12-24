@@ -2,6 +2,8 @@
 
 @section('content')
     <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+
+        <!-- Header -->
         <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white/90">
                 All Category
@@ -9,13 +11,12 @@
             <nav>
                 <ol class="flex items-center gap-1.5">
                     <li>
-                        <a class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400"
-                           href="{{ route('dashboard') }}">
+                        <a href="{{ route('dashboard') }}"
+                           class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
                             Home
-                            <svg class="stroke-current" width="17" height="16" viewBox="0 0 17 16" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path d="M6.0765 12.667L10.2432 8.50033L6.0765 4.33366" stroke="" stroke-width="1.2"
-                                      stroke-linecap="round" stroke-linejoin="round"></path>
+                            <svg class="stroke-current" width="17" height="16" viewBox="0 0 17 16" fill="none">
+                                <path d="M6.0765 12.667L10.2432 8.50033L6.0765 4.33366"
+                                      stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </a>
                     </li>
@@ -26,103 +27,98 @@
             </nav>
         </div>
 
+        <!-- Success Message -->
         @if (session('success'))
-            <div class="text-success-500 bg-success-100 my-5 p-3 rounded-xl">
+            <div class="my-5 rounded-xl bg-success-100 p-3 text-success-500">
                 {{ session('success') }}
             </div>
         @endif
 
+        <!-- Card -->
         <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
-            <div class="flex flex-col justify-between gap-5 border-b border-gray-200 px-5 py-4 sm:flex-row sm:items-center dark:border-gray-800">
+
+            <!-- Card Header -->
+            <div class="flex flex-col gap-5 border-b border-gray-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between dark:border-gray-800">
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
-                        Category List
-                    </h3>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">Category List</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
                         Track your store's progress to boost your sales.
                     </p>
                 </div>
-                <div class="flex gap-3">
-                    <a href="{{ route('inventory.category.create') }}"
-                       class="bg-brand-500 shadow-theme-xs hover:bg-brand-600 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-white transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M5 10.0002H15.0006M10.0002 5V15.0006" stroke="currentColor" stroke-width="1.5"
-                                  stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                        Add category
-                    </a>
-                </div>
+
+                <a href="{{ route('inventory.category.create') }}"
+                   class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-3 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600">
+                    <svg width="20" height="20" fill="none">
+                        <path d="M5 10H15M10 5V15"
+                              stroke="currentColor" stroke-width="1.5"
+                              stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Add category
+                </a>
             </div>
 
+            <!-- Search -->
             <div class="border-b border-gray-200 px-5 py-4 dark:border-gray-800">
-                <div class="flex gap-3 sm:justify-between">
-                    <div class="relative flex-1 sm:flex-auto">
-                        <span class="absolute top-1/2 left-4 -translate-y-1/2 text-gray-500 dark:text-gray-400">
-                            <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                      d="M3.04199 9.37363C3.04199 5.87693 5.87735 3.04199 9.37533 3.04199C12.8733 3.04199 15.7087 5.87693 15.7087 9.37363C15.7087 12.8703 12.8733 15.7053 9.37533 15.7053C5.87735 15.7053 3.04199 12.8703 3.04199 9.37363ZM9.37533 1.54199C5.04926 1.54199 1.54199 5.04817 1.54199 9.37363C1.54199 13.6991 5.04926 17.2053 9.37533 17.2053C11.2676 17.2053 13.0032 16.5344 14.3572 15.4176L17.1773 18.238C17.4702 18.5309 17.945 18.5309 18.2379 18.238C18.5308 17.9451 18.5309 17.4703 18.238 17.1773L15.4182 14.3573C16.5367 13.0033 17.2087 11.2669 17.2087 9.37363C17.2087 5.04817 13.7014 1.54199 9.37533 1.54199Z"
-                                      fill=""></path>
-                            </svg>
-                        </span>
-                        <input type="text" placeholder="Search..." id="searchInput"
-                               class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent py-2.5 pr-4 pl-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden sm:w-[300px] sm:min-w-[300px] dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30">
-                    </div>
+                <div class="relative sm:w-[300px]">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                    🔍
+                </span>
+                    <input id="searchInput" type="text" placeholder="Search..."
+                           class="h-11 w-full rounded-lg border border-gray-300 bg-transparent pl-11 pr-4 text-sm
+                              focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10
+                              dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                 </div>
             </div>
 
             <!-- Table -->
-            <div class="custom-scrollbar overflow-x-auto">
+            <div class="overflow-x-auto pb-20">
                 <table class="w-full table-auto">
                     <thead>
-                    <tr class="border-b border-gray-200 dark:divide-gray-800 dark:border-gray-800">
-                        <th class="px-5 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
-                            Image
-                        </th>
-                        <th class="px-5 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
-                            Category Name
-                        </th>
-                        <th class="px-5 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
-                           <p>Action</p>
-                        </th>
+                    <tr class="border-b border-gray-200 dark:border-gray-800">
+                        <th class="px-5 py-4 text-left text-xs text-gray-500">Image</th>
+                        <th class="px-5 py-4 text-left text-xs text-gray-500">Category Name</th>
+                        <th class="px-5 py-4 text-left text-xs text-gray-500">Action</th>
                     </tr>
                     </thead>
-                    <tbody class="divide-x divide-y divide-gray-200 dark:divide-gray-800" id="categoryTableBody">
-                    @forelse($categories as $category)
-                        <tr class="transition hover:bg-gray-50 dark:hover:bg-gray-900 category-row">
-                            <td class="px-5 py-4 whitespace-nowrap">
-                                <div class="h-12 w-12">
-                                    <img src="{{ asset('storage/'.$category->image) }}"
-                                         class="h-12 w-12 rounded-md object-cover"
-                                         alt="{{ $category->name }}"
-                                         onerror="this.src='https://via.placeholder.com/48'">
-                                </div>
+
+                    <tbody id="categoryTableBody" class="divide-y divide-gray-200 dark:divide-gray-800">
+                    @forelse ($categories as $category)
+                        <tr class="category-row hover:bg-gray-50 dark:hover:bg-gray-900 transition">
+                            <td class="px-5 py-4">
+                                <img src="{{ asset('storage/'.$category->image) }}"
+                                     class="h-12 w-12 rounded-md object-cover"
+                                     onerror="this.src='https://via.placeholder.com/48'">
                             </td>
-                            <td class="px-5 py-4 whitespace-nowrap">
-                                    <span class="text-sm font-medium text-gray-700 dark:text-gray-400">
-                                        {{ $category->name }}
-                                    </span>
+
+                            <td class="px-5 py-4">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-400">
+                                {{ $category->name }}
+                            </span>
                             </td>
-                            <td class="px-5 py-4 whitespace-nowrap">
-                                <div class="relative flex justify-center">
-                                    <button class="text-gray-500 dark:text-gray-400 dropdown-trigger">
-                                        <svg class="fill-current" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                             xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                  d="M5.99902 10.245C6.96552 10.245 7.74902 11.0285 7.74902 11.995V12.005C7.74902 12.9715 6.96552 13.755 5.99902 13.755C5.03253 13.755 4.24902 12.9715 4.24902 12.005V11.995C4.24902 11.0285 5.03253 10.245 5.99902 10.245ZM17.999 10.245C18.9655 10.245 19.749 11.0285 19.749 11.995V12.005C19.749 12.9715 18.9655 13.755 17.999 13.755C17.0325 13.755 16.249 12.9715 16.249 12.005V11.995C16.249 11.0285 17.0325 10.245 17.999 10.245ZM13.749 11.995C13.749 11.0285 12.9655 10.245 11.999 10.245C11.0325 10.245 10.249 11.0285 10.249 11.995V12.005C10.249 12.9715 11.0325 13.755 11.999 13.755C12.9655 13.755 13.749 12.9715 13.749 12.005V11.995Z"
-                                                  fill=""></path>
-                                        </svg>
+
+                            <!-- Action -->
+                            <td class="px-5 py-4">
+                                <div class="relative inline-block">
+                                    <button class="dropdown-trigger text-gray-500 hover:text-gray-700">
+                                        ⋮
                                     </button>
-                                    <div class="dropdown-menu shadow-theme-lg fixed w-40 space-y-1 rounded-2xl border border-gray-200 bg-white p-2 dark:border-gray-800 dark:bg-gray-800" style="display: none;">
+
+                                    <!-- Dropdown -->
+                                    <div class="dropdown-menu absolute right-0 z-50 mt-2 hidden w-40
+                                            rounded-xl border border-gray-200 bg-white p-2 shadow-lg
+                                            dark:border-gray-800 dark:bg-gray-800">
                                         <a href="{{ route('inventory.category.edit', $category->id) }}"
-                                           class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
+                                           class="block rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-300">
                                             Edit
                                         </a>
-                                        <form action="{{ route('inventory.category.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this category?');">
+
+                                        <form method="POST"
+                                              action="{{ route('inventory.category.destroy', $category->id) }}"
+                                              onsubmit="return confirm('Are you sure?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                    class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-red-500 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-500/10 dark:hover:text-red-300">
+                                                    class="w-full rounded-lg px-3 py-2 text-left text-sm text-red-500 hover:bg-red-50">
                                                 Delete
                                             </button>
                                         </form>
@@ -132,8 +128,8 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3" class="px-5 py-8 text-center">
-                                <p class="text-sm text-gray-500 dark:text-gray-400">No categories found.</p>
+                            <td colspan="3" class="px-5 py-8 text-center text-sm text-gray-500">
+                                No categories found.
                             </td>
                         </tr>
                     @endforelse
@@ -143,31 +139,27 @@
         </div>
     </div>
 
+    <!-- Scripts -->
     <script>
-        // Dropdown functionality
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.dropdown-trigger')) {
-                const dropdown = e.target.closest('.dropdown-trigger').nextElementSibling;
-                dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-            } else if (!e.target.closest('.dropdown-menu')) {
-                document.querySelectorAll('.dropdown-menu').forEach(menu => {
-                    menu.style.display = 'none';
-                });
+        /* Dropdown */
+        document.addEventListener('click', function (e) {
+            const trigger = e.target.closest('.dropdown-trigger');
+
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.classList.add('hidden');
+            });
+
+            if (trigger) {
+                const menu = trigger.nextElementSibling;
+                menu.classList.toggle('hidden');
             }
         });
 
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const rows = document.querySelectorAll('.category-row');
-
-            rows.forEach(row => {
-                const categoryName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-                if (categoryName.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+        /* Search */
+        document.getElementById('searchInput').addEventListener('input', function () {
+            const value = this.value.toLowerCase();
+            document.querySelectorAll('.category-row').forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(value) ? '' : 'none';
             });
         });
     </script>

@@ -2,15 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Attribute;
 use App\Models\Blog;
-use App\Http\Controllers\Controller;
 use App\Models\BlogCategory;
-use App\Models\MappingVariant;
-use App\Models\Product;
-use App\Models\ProductCategory;
-use App\Models\ProductImage;
-use App\Models\Variant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -19,226 +12,169 @@ use Illuminate\Support\Str;
 class BlogController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of blogs
      */
     public function index(Request $request)
     {
-        $query = Blog::with(['category']);
-
-        // Add search functionality
-        if ($request->has('search') && !empty($request->search)) {
-            $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
-                $q->where('name', 'LIKE', '%' . $searchTerm . '%')
-                    ->orWhere('content', 'LIKE', '%' . $searchTerm . '%');
-            });
-        }
-
-        // Apply pagination
-        $blogs = $query->paginate(15); // Default is 15 items per page
-
-        // Preserve search term in pagination links
-        if ($request->has('search')) {
-            $blogs->appends(['search' => $request->search]);
-        }
+        $blogs = Blog::with('category')
+            ->when($request->search, function ($query) use ($request) {
+                $query->where('title', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('content', 'LIKE', '%' . $request->search . '%');
+            })
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
 
         return view('pages.blog.show', compact('blogs'));
     }
 
+    /**
+     * Show create form
+     */
     public function create()
     {
-        $blogCategory = BlogCategory::all();
-        return view('pages.blog.create', compact('blogCategory',));
+        $categories = BlogCategory::all();
+        return view('pages.blog.create', compact('categories'));
     }
 
+    public function show($id)
+    {
+        $categories = BlogCategory::all();
+        $blog = Blog::with('category')->find($id);
+        return view('pages.blog.edit', compact('categories', 'blog'));
+    }
 
     /**
-     * Store a newly created resource in storage.
+     * Store blog
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'title'       => 'required|string|max:255|unique:blogs,title',
+            'content'     => 'required',
+            'category_id' => 'required|exists:blog_categories,id',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp',
+        ]);
+
         DB::beginTransaction();
+
         try {
+            $imagePath = null;
 
-            $user = auth()->user();
-            $product = Product::create([
-                'name' => $request->name,
-                'slug' => Str::slug($request->name) . '-' . uniqid(),
-                'description' => $request->description,
-                'base_price' => $request->base_price,
-                'stock' => $request->stock,
-                'category_id' => $request->category_id,
-                'sku' => $request->sku,
-                'has_variant' => $request->variants=='on' ? true : false,
-                'status' => $request->status=='on' ? true : false,
-                'added_by' => $user->id,
-            ]);
-
-            if ($request->hasFile('images')) {
-                foreach ($request->file('images') as $index => $file) {
-
-                    $filename = uniqid('product_', true) . '.' . $file->extension();
-                    $file->move(public_path('storage/images'), $filename);
-
-                    ProductImage::create([
-                        'product_id' => $product->id,
-                        'image' => 'images/' . $filename,
-                        'is_primary' => $index === 0, // first image primary
-                    ]);
-                }
+            if ($request->hasFile('image')) {
+                $image     = $request->file('image');
+                $imageName = uniqid('blog_', true) . '.' . $image->extension();
+                $image->move(public_path('storage/images'), $imageName);
+                $imagePath = 'images/' . $imageName;
             }
 
+            $slug = Str::slug($request->title);
+            if (Blog::where('slug', $slug)->exists()) {
+                $slug .= '-' . uniqid();
+            }
+
+            Blog::create([
+                'title'       => $request->title,
+                'slug'        => $slug,
+                'content'     => $request->content,
+                'category_id' => $request->category_id,
+                'status'      => $request->has('status'),
+                'author'      => auth()->id(),
+                'image'       => $imagePath,
+            ]);
+
             DB::commit();
-            return redirect()->route('inventory.product.index')
-                ->with('success', 'Product added successfully!');
+
+            return redirect()
+                ->route('blogs.index')
+                ->with('success', 'Blog created successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage());
-            return redirect()->back()->with('error', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
-
-
-
-    public function variant($id)
-    {
-        // Find the product, if not found, redirect back with error
-        $product = Product::find($id);
-        if (!$product) {
-            return redirect()->back()->with('error', 'Product not found.');
-        }
-
-        // Fetch all variants and attributes
-        $variants = Variant::all();
-        $attributes = Attribute::all();
-
-        // Fetch mappings for this product with related variant and attribute
-        $mappings = MappingVariant::with(['variant', 'attribute'])
-            ->where('product_id', $id)
-            ->get();
-
-        $product_id = $id;
-        // Return view with all data
-        return view('pages.inventory.product.variant', compact('product_id', 'mappings', 'variants', 'attributes'));
-    }
-
 
     /**
-     * Display the specified resource.
+     * Show edit form
      */
-    public function show($id)
+    public function edit($id)
     {
-        $product = Product::find($id);
-        if (!$product) {
-            return redirect()->back()->with('error', 'Product not found.');
-        }
-        $productImages = ProductImage::where("product_id", $id)->get();
-        $categories = ProductCategory::all();
-        return view('pages.inventory.product.edit', compact('product', 'productImages','categories'));
+        $blog = Blog::findOrFail($id);
+        $categories = BlogCategory::all();
+
+        return view('pages.blog.edit', compact('blog', 'categories'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update blog
      */
     public function update(Request $request, $id)
     {
+        $blog = Blog::findOrFail($id);
+
+        $request->validate([
+            'title'       => 'required|string|max:255|unique:blogs,title,' . $blog->id,
+            'content'     => 'required',
+            'category_id' => 'required|exists:blog_categories,id',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp',
+        ]);
+
         DB::beginTransaction();
 
         try {
-            $product = Product::findOrFail($id);
-            $product->update([
-                'name'        => $request->name,
-                'slug'        => $product->slug ?? Str::slug($request->name),
-                'description' => $request->description,
-                'base_price'  => $request->base_price,
-                'stock'       => $request->stock,
-                'category_id' => $request->category_id,
-                'sku'         => $request->sku,
-                'has_variant' => $request->has_variant ? true : false,
-                'status'      => $request->status ? true : false,
-            ]);
-
-            /** NEW IMAGES */
-            if ($request->hasFile('images')) {
-
-                // আগে থেকে primary আছে কিনা চেক
-                $hasPrimary = ProductImage::where('product_id', $product->id)
-                    ->where('is_primary', true)
-                    ->exists();
-
-                foreach ($request->file('images') as $index => $file) {
-
-                    $filename = uniqid('product_', true) . '.' . $file->extension();
-                    $file->move(public_path('storage/images'), $filename);
-
-                    ProductImage::create([
-                        'product_id' => $product->id,
-                        'image'      => 'images/' . $filename,
-
-                        'is_primary' => (!$hasPrimary && $index === 0),
-                    ]);
+            if ($request->hasFile('image')) {
+                // delete old image
+                if ($blog->image && File::exists(public_path('storage/' . $blog->image))) {
+                    File::delete(public_path('storage/' . $blog->image));
                 }
+
+                $image     = $request->file('image');
+                $imageName = uniqid('blog_', true) . '.' . $image->extension();
+                $image->move(public_path('storage/images'), $imageName);
+                $blog->image = 'images/' . $imageName;
             }
 
+            if ($blog->title !== $request->title) {
+                $slug = Str::slug($request->title);
+                if (Blog::where('slug', $slug)->where('id', '!=', $blog->id)->exists()) {
+                    $slug .= '-' . uniqid();
+                }
+                $blog->slug = $slug;
+            }
+
+            $blog->update([
+                'title'       => $request->title,
+                'content'     => $request->content,
+                'category_id' => $request->category_id,
+                'status'      => $request->has('status'),
+            ]);
 
             DB::commit();
+
             return redirect()
-                ->route('inventory.product.index')
-                ->with('success', 'Product updated successfully!');
+                ->route('blogs.index')
+                ->with('success', 'Blog updated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete blog
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
-        //
-    }
+        $blog = Blog::findOrFail($id);
 
-    public function destroyVariant($id)
-    {
-        try{
-            $variant = MappingVariant::find($id);
-            $variant->delete();
-            return redirect()->back()->with('success', 'Variant deleted successfully.');
-        }catch (\Exception $e) {
-
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
-    /** DELETE IMAGE */
-    public function destroyImage($id)
-    {
-        $image = ProductImage::findOrFail($id);
-
-        $path = public_path('storage/' . $image->image);
-        if (File::exists($path)) {
-            File::delete($path);
+        if ($blog->image && File::exists(public_path('storage/' . $blog->image))) {
+            File::delete(public_path('storage/' . $blog->image));
         }
 
-        $image->delete();
+        $blog->delete();
 
-        return response()->json(['success' => true]);
-    }
-
-    /** SET PRIMARY IMAGE */
-    public function setPrimary($id)
-    {
-        $image = ProductImage::findOrFail($id);
-
-        // remove old primary
-        ProductImage::where('product_id', $image->product_id)
-            ->update(['is_primary' => false]);
-        ProductImage::where('product_id', $image->product_id)->update(['is_primary' => false]);
-        // set new primary
-        $image->update(['is_primary' => true]);
-
-
-        return response()->json(['success' => true]);
+        return redirect()
+            ->route('blogs.index')
+            ->with('success', 'Blog deleted successfully!');
     }
 }

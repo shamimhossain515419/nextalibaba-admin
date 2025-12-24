@@ -58,7 +58,7 @@
                 </ol>
             </nav>
         </div>
-        <form action="{{ route('blogst.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('blogs.store') }}" method="POST" enctype="multipart/form-data" id="blogForm">
             @csrf
             <input type="hidden" autocomplete="off">
             <div class="space-y-6">
@@ -78,27 +78,19 @@
                                        placeholder="Enter title " required>
                             </div>
                             <div>
-                                <label for="sku"
-                                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Product
-                                    SKU</label>
-                                <input type="text" id="sku" name="sku"
-                                       class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                                       placeholder="Enter product name" required>
-                            </div>
-                            <div>
                                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                    Category
+                                    Blog Category
                                 </label>
                                 <div class="relative z-20 bg-transparent">
                                     <select
                                         class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                                        :class="isOptionSelected &amp;&amp; 'text-gray-800 dark:text-white/90'"
+                                        :class="isOptionSelected && 'text-gray-800 dark:text-white/90'"
                                         name="category_id" required>
                                         <option value="" class="text-gray-700 dark:bg-gray-900 dark:text-gray-400">
-                                            Select Category
+                                            Select Blog Category
                                         </option>
 
-                                        @foreach($blogCategory as $category)
+                                        @foreach($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                                         @endforeach
                                     </select>
@@ -112,47 +104,19 @@
                           </span>
                                 </div>
                             </div>
-                            <div>
-                                <label for="base_price"
-                                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Product
-                                    Price</label>
-                                <input type="number" id="base_price" name="base_price"
-                                       class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                                       placeholder="Enter Price" required>
-                            </div>
 
-                            <div>
-                                <label for="stock"
-                                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Stock</label>
-                                <input type="number" id="stock" name="stock"
-                                       class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                                       placeholder="Enter stock" required>
-                            </div>
 
                             <div class="col-span-full">
                                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                    Description
+                                    Content
                                 </label>
-                                <textarea name="description" placeholder="Description (optional)" type="text" rows="7"
-                                          class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 w-full resize-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                                          spellcheck="false"></textarea>
+                                <!-- Quill Editor Container -->
+                                <div id="editor" style="height: 400px; background-color: white;" class="rounded-lg border border-gray-300 dark:border-gray-700"></div>
+                                <!-- Hidden textarea for form submission -->
+                                <textarea name="content" id="content" style="display:none;"></textarea>
                             </div>
 
-                            <div x-data="{ checkboxToggle: false }">
-                                <label for="checkboxLabelOne" class="flex cursor-pointer items-center text-sm font-medium text-gray-700 select-none dark:text-gray-400">
-                                    <div class="relative">
-                                        <input type="checkbox" name="has_variant" id="checkboxLabelOne" class="sr-only" @change="checkboxToggle = !checkboxToggle">
-                                        <div :class="checkboxToggle ? 'border-brand-500 bg-brand-500' : 'bg-transparent border-gray-300 dark:border-gray-700'" class="f hover:border-brand-500 dark:hover:border-brand-500 mr-3 flex h-5 w-5 items-center justify-center rounded-md border-[1.25px] border-brand-500 bg-brand-500">
-                              <span :class="checkboxToggle ? '' : 'opacity-0'" class="">
-                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M11.6666 3.5L5.24992 9.91667L2.33325 7" stroke="white" stroke-width="1.94437" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
-                              </span>
-                                        </div>
-                                    </div>
-                                    Has Variant
-                                </label>
-                            </div>
+
                             <div x-data="{ switcherToggle: false }">
                                 <label for="toggle2" class="flex cursor-pointer items-center gap-3 text-sm font-medium text-gray-700 select-none dark:text-gray-400">
                                     <div class="relative">
@@ -161,7 +125,7 @@
                                         <div :class="switcherToggle ? 'translate-x-full': 'translate-x-0'" class="shadow-theme-sm absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white duration-300 ease-linear translate-x-full"></div>
                                     </div>
 
-                                    Status
+                                    status
                                 </label>
                             </div>
 
@@ -172,91 +136,177 @@
                 <!-- Products Images Section -->
                 <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
                     <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
-                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">Product Images</h2>
+                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">Blog Images</h2>
                     </div>
                     <div class="p-4 sm:p-6">
-                        <div class="mb-4">
-
-                            <label for="images"
-                                   class="flex cursor-pointer items-center justify-center rounded border-2 border-dashed p-6">
-                                Click to upload images
-                                <input type="file" name="images[]" id="images" class="hidden" multiple accept="image/*">
-                            </label>
-
-                            {{-- Preview --}}
-                            <div id="preview" class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-                        </div>
+                        <label for="image"
+                               class="block cursor-pointer rounded-lg border-2 border-dashed border-gray-300 transition hover:border-blue-500 dark:border-gray-800" id="imageUploadLabel">
+                            <div class="flex justify-center p-10" id="uploadPlaceholder">
+                                <div class="flex max-w-65 flex-col items-center gap-4">
+                                    <div
+                                        class="inline-flex h-13 w-13 items-center justify-center rounded-full border border-gray-200 text-gray-700 transition dark:border-gray-800 dark:text-gray-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path
+                                                d="M20.0004 16V18.5C20.0004 19.3284 19.3288 20 18.5004 20H5.49951C4.67108 20 3.99951 19.3284 3.99951 18.5V16M12.0015 4L12.0015 16M7.37454 8.6246L11.9994 4.00269L16.6245 8.6246"
+                                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </div>
+                                    <p class="text-center text-sm text-gray-500 dark:text-gray-400">
+                                        <span class="font-medium text-gray-800 dark:text-white/90">Click to upload</span> or drag and drop
+                                        SVG, PNG, JPG or GIF (MAX. 800x400px)
+                                    </p>
+                                </div>
+                            </div>
+                            <div id="imagePreview" class="hidden p-4">
+                                <div class="relative">
+                                    <img id="previewImg" src="" alt="Preview" class="w-full h-auto max-h-96 object-contain rounded-lg">
+                                    <button type="button" id="removeImage" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="file" name="image" id="image" class="hidden" accept="image/*">
+                        </label>
                     </div>
-
-
-                    {{-- Multiple Images --}}
-
                 </div>
+
 
                 <!-- Buttons -->
                 <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
                     <button type="submit"
                             class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-3 text-sm font-medium text-white transition hover:bg-blue-600">
-                        Publish Product
+                        Publish Blog
                     </button>
                 </div>
             </div>
         </form>
 
     </div>
-    {{-- Preview Script --}}
+
+    <!-- Quill CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+    <!-- Quill JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
     <script>
-        const imagesInput = document.getElementById('images');
-        const preview = document.getElementById('preview');
-
-        let selectedFiles = [];
-
-        imagesInput.addEventListener('change', function () {
-            selectedFiles = Array.from(this.files);
-            renderPreview();
+        // Quill Editor Initialize
+        var quill = new Quill('#editor', {
+            theme: 'snow',
+            placeholder: 'Write your amazing blog content here...',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    [{ 'font': [] }],
+                    [{ 'size': ['small', false, 'large', 'huge'] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'script': 'sub'}, { 'script': 'super' }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'indent': '-1'}, { 'indent': '+1' }],
+                    [{ 'align': [] }],
+                    ['blockquote', 'code-block'],
+                    ['link', 'image', 'video'],
+                    ['clean']
+                ]
+            }
         });
 
-        function renderPreview() {
-            preview.innerHTML = '';
+        // Form submit hole hidden textarea te content save hobe
+        document.getElementById('blogForm').onsubmit = function() {
+            var content = document.querySelector('#content');
+            content.value = quill.root.innerHTML;
+        };
 
-            selectedFiles.forEach((file, index) => {
-                if (!file.type.startsWith('image/')) return;
+        // Image Preview Functionality
+        const imageInput = document.getElementById('image');
+        const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+        const removeImageBtn = document.getElementById('removeImage');
 
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
                 const reader = new FileReader();
-
-                reader.onload = e => {
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'relative';
-
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.className = 'h-32 w-full rounded object-cover border';
-
-                    const removeBtn = document.createElement('button');
-                    removeBtn.innerHTML = '&times;';
-                    removeBtn.className =
-                        'absolute top-1 right-1 h-6 w-6 rounded-full bg-red-600 text-white text-sm flex items-center justify-center hover:bg-red-700';
-
-                    removeBtn.onclick = () => removeImage(index);
-
-                    wrapper.appendChild(img);
-                    wrapper.appendChild(removeBtn);
-                    preview.appendChild(wrapper);
-                };
-
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    uploadPlaceholder.classList.add('hidden');
+                    imagePreview.classList.remove('hidden');
+                }
                 reader.readAsDataURL(file);
-            });
-        }
+            }
+        });
 
-        function removeImage(index) {
-            selectedFiles.splice(index, 1);
-
-            const dataTransfer = new DataTransfer();
-            selectedFiles.forEach(file => dataTransfer.items.add(file));
-
-            imagesInput.files = dataTransfer.files;
-            renderPreview();
-        }
+        removeImageBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            imageInput.value = '';
+            previewImg.src = '';
+            uploadPlaceholder.classList.remove('hidden');
+            imagePreview.classList.add('hidden');
+        });
     </script>
+
+    <style>
+        /* Quill editor always white background */
+        .ql-toolbar {
+            background-color: #ffffff !important;
+            border-color: #d1d5db;
+        }
+
+        .ql-container {
+            background-color: #ffffff !important;
+            border-color: #d1d5db;
+            color: #1f2937;
+        }
+
+        .ql-editor.ql-blank::before {
+            color: #9ca3af;
+        }
+
+        .ql-snow .ql-stroke {
+            stroke: #374151;
+        }
+
+        .ql-snow .ql-fill {
+            fill: #374151;
+        }
+
+        .ql-snow .ql-picker-label {
+            color: #374151;
+        }
+
+        /* Dark mode e o white background thakbe */
+        .dark .ql-toolbar {
+            background-color: #ffffff !important;
+            border-color: #d1d5db;
+        }
+
+        .dark .ql-container {
+            background-color: #ffffff !important;
+            border-color: #d1d5db;
+            color: #1f2937;
+        }
+
+        .dark .ql-editor.ql-blank::before {
+            color: #9ca3af;
+        }
+
+        .dark .ql-snow .ql-stroke {
+            stroke: #374151;
+        }
+
+        .dark .ql-snow .ql-fill {
+            fill: #374151;
+        }
+
+        .dark .ql-snow .ql-picker-label {
+            color: #374151;
+        }
+    </style>
 
 @endsection
