@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FeaturesCategoryController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
@@ -17,5 +18,7 @@ Route::middleware([
 Route::get('/get-all-category', [ProductCategoryController::class, 'indexWebView']);
 
 Route::get('/get-product-by-category', [ProductController::class, 'getProductByCategory']);
+Route::get('/get-product-by-slug/{slug}', [ProductController::class, 'getProductBySlug']);
+Route::get('/get-product-by-feature-category', [ProductController::class, 'getProductFeaturesWise']);
 
-
+Route::get('/get-all-features', [FeaturesCategoryController::class, 'indexWebView']);

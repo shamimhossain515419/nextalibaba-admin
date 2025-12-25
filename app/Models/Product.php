@@ -27,7 +27,10 @@ class Product extends Model
 
     // Product has many variants
     public function variants() {
-        return $this->hasMany(ProductVariant::class);
+        return $this->hasMany(Variant::class);
+    }
+    public function mappingVariants() {
+        return $this->hasMany(MappingVariant::class);
     }
     // Product has many images
     public function images() {

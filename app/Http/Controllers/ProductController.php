@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attribute;
+use App\Models\FeaturesProduct;
 use App\Models\MappingVariant;
 use App\Models\Product;
 use Illuminate\Support\Facades\File;
@@ -54,14 +55,48 @@ class ProductController extends Controller
     public function getProductByCategory(Request $request)
     {
         $slug = $request->slug;
-        $productCategory= ProductCategory::where('slug', $slug)->first();
-        $products = Product::with('mainTwoImages')->where('category_id', $productCategory->id)->paginate(15);
+        $productCategory= ProductCategory::where('slug', 'bags-baggage')->first();
+        $products = Product::with(['mainTwoImages','category'])->paginate(15);
         return response()->json([
             'success' => true,
             'message' => 'Get product category wise fetched successfully',
-            'data' => $products
+            'data' => $products,
+            'productCategory' => $productCategory,
         ], 200);
     }
+
+    public function getProductBySlug(Request $request,$slug)
+    {
+        $product = Product::with(['category','images','mappingVariants','mappingVariants.variant','mappingVariants.attribute'])->where('slug',$slug)->first();
+        $relatedProduct = Product::with(['category','mainTwoImages'])
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id) // Exclude current product
+            ->get();
+        return response()->json([
+            'success' => true,
+            'message' => 'Get product category wise fetched successfully',
+            'data' => $product,
+            'relatedProduct' => $relatedProduct
+        ], 200);
+    }
+
+    public function getProductFeaturesWise(Request $request)
+    {
+        $categoryId = $request->category_id;
+        $limit = $request->limit ?? 5; // Default to 10 if limit is not provided
+
+        $products = FeaturesProduct::with(['product','product.category', 'product.mainTwoImages'])
+            ->where('features_category_id', $categoryId)
+            ->paginate($limit);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Get product category wise fetched successfully',
+            'data' => $products,
+        ], 200);
+    }
+
+
 
 
 

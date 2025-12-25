@@ -16,6 +16,15 @@ class FeaturesCategoryController extends Controller
         $features = FeaturesCategory::all();
         return view('pages.features-category.show', compact('features'));
     }
+    public function indexWebView()
+    {
+        $features = FeaturesCategory::all();
+        return response()->json([
+            'success' => true,
+            'message' => 'Get  features category  fetched successfully',
+            'data' => $features,
+        ], 200);
+    }
     public function create()
     {
         return view('pages.features-category.create');

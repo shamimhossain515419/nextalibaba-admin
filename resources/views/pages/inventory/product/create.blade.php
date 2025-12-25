@@ -58,7 +58,7 @@
                 </ol>
             </nav>
         </div>
-        <form action="{{ route('inventory.product.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('inventory.product.store') }}" method="POST" enctype="multipart/form-data" id="productForm">
             @csrf
             <input type="hidden" autocomplete="off">
             <div class="space-y-6">
@@ -129,14 +129,18 @@
                                        placeholder="Enter stock" required>
                             </div>
 
+
                             <div class="col-span-full">
                                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                                     Description
                                 </label>
-                                <textarea name="description" placeholder="Description (optional)" type="text" rows="7"
-                                          class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 w-full resize-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                                          spellcheck="false"></textarea>
+                                <!-- Quill Editor Container -->
+                                <div id="editor" style="height: 400px; background-color: white;" class="rounded-lg border border-gray-300 dark:border-gray-700"></div>
+                                <!-- Hidden textarea for form submission -->
+                                <textarea name="description" id="description" style="display:none;"></textarea>
                             </div>
+
+
 
                             <div x-data="{ checkboxToggle: false }">
                                 <label for="checkboxLabelOne" class="flex cursor-pointer items-center text-sm font-medium text-gray-700 select-none dark:text-gray-400">
@@ -259,4 +263,127 @@
         }
     </script>
 
+
+    <!-- Quill CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+    <!-- Quill JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+    <script>
+        // Quill Editor Initialize
+        var quill = new Quill('#editor', {
+            theme: 'snow',
+            placeholder: 'Write your amazing blog content here...',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    [{ 'font': [] }],
+                    [{ 'size': ['small', false, 'large', 'huge'] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'script': 'sub'}, { 'script': 'super' }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'indent': '-1'}, { 'indent': '+1' }],
+                    [{ 'align': [] }],
+                    ['blockquote', 'code-block'],
+                    ['link', 'image', 'video'],
+                    ['clean']
+                ]
+            }
+        });
+
+        // Form submit hole hidden textarea te content save hobe
+        document.getElementById('productForm').onsubmit = function() {
+            var description = document.querySelector('#description');
+            description.value = quill.root.innerHTML;
+        };
+
+        // Image Preview Functionality
+        const imageInput = document.getElementById('image');
+        const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+        const removeImageBtn = document.getElementById('removeImage');
+
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    uploadPlaceholder.classList.add('hidden');
+                    imagePreview.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        removeImageBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            imageInput.value = '';
+            previewImg.src = '';
+            uploadPlaceholder.classList.remove('hidden');
+            imagePreview.classList.add('hidden');
+        });
+    </script>
+
+    <style>
+        /* Quill editor always white background */
+        .ql-toolbar {
+            background-color: #ffffff !important;
+            border-color: #d1d5db;
+        }
+
+        .ql-container {
+            background-color: #ffffff !important;
+            border-color: #d1d5db;
+            color: #1f2937;
+        }
+
+        .ql-editor.ql-blank::before {
+            color: #9ca3af;
+        }
+
+        .ql-snow .ql-stroke {
+            stroke: #374151;
+        }
+
+        .ql-snow .ql-fill {
+            fill: #374151;
+        }
+
+        .ql-snow .ql-picker-label {
+            color: #374151;
+        }
+
+        /* Dark mode e o white background thakbe */
+        .dark .ql-toolbar {
+            background-color: #ffffff !important;
+            border-color: #d1d5db;
+        }
+
+        .dark .ql-container {
+            background-color: #ffffff !important;
+            border-color: #d1d5db;
+            color: #1f2937;
+        }
+
+        .dark .ql-editor.ql-blank::before {
+            color: #9ca3af;
+        }
+
+        .dark .ql-snow .ql-stroke {
+            stroke: #374151;
+        }
+
+        .dark .ql-snow .ql-fill {
+            fill: #374151;
+        }
+
+        .dark .ql-snow .ql-picker-label {
+            color: #374151;
+        }
+    </style>
 @endsection
