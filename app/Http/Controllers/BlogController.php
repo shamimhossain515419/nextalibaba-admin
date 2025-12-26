@@ -44,16 +44,61 @@ class BlogController extends Controller
         return view('pages.blog.edit', compact('categories', 'blog'));
     }
 
+
+    public function allBlog(Request $request)
+    {
+        try {
+            $limit = $request->limit ?? 10;
+            $blogs = Blog::with('category')
+                ->where('status', 1)
+                ->paginate($limit);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Blog fetched successfully',
+                'data' => $blogs,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong while fetching blogs',
+                'error' => $e->getMessage(), // remove in production if needed
+            ], 500);
+        }
+    }
+
+    public function allBlogCategory(Request $request)
+    {
+        try {
+            $categories = BlogCategory::all();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Category fetched successfully',
+                'data' => $categories,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong while fetching categories',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
     /**
      * Store blog
      */
     public function store(Request $request)
     {
         $request->validate([
-            'title'       => 'required|string|max:255|unique:blogs,title',
-            'content'     => 'required',
+            'title' => 'required|string|max:255|unique:blogs,title',
+            'content' => 'required',
             'category_id' => 'required|exists:blog_categories,id',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp',
         ]);
 
         DB::beginTransaction();
@@ -62,7 +107,7 @@ class BlogController extends Controller
             $imagePath = null;
 
             if ($request->hasFile('image')) {
-                $image     = $request->file('image');
+                $image = $request->file('image');
                 $imageName = uniqid('blog_', true) . '.' . $image->extension();
                 $image->move(public_path('storage/images'), $imageName);
                 $imagePath = 'images/' . $imageName;
@@ -74,13 +119,13 @@ class BlogController extends Controller
             }
 
             Blog::create([
-                'title'       => $request->title,
-                'slug'        => $slug,
-                'content'     => $request->content,
+                'title' => $request->title,
+                'slug' => $slug,
+                'content' => $request->content,
                 'category_id' => $request->category_id,
-                'status'      => $request->has('status'),
-                'author'      => auth()->id(),
-                'image'       => $imagePath,
+                'status' => $request->has('status'),
+                'author' => auth()->id(),
+                'image' => $imagePath,
             ]);
 
             DB::commit();
@@ -105,6 +150,28 @@ class BlogController extends Controller
         return view('pages.blog.edit', compact('blog', 'categories'));
     }
 
+    public function getSingleProductBySlug($slug)
+    {
+
+        try {
+            $blog = Blog::where('slug',$slug)->first();
+            return response()->json([
+                'success' => true,
+                'message' => 'Blog fetched successfully',
+                'data' => $blog,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong while fetching categories',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+
+
+    }
+
     /**
      * Update blog
      */
@@ -113,10 +180,10 @@ class BlogController extends Controller
         $blog = Blog::findOrFail($id);
 
         $request->validate([
-            'title'       => 'required|string|max:255|unique:blogs,title,' . $blog->id,
-            'content'     => 'required',
+            'title' => 'required|string|max:255|unique:blogs,title,' . $blog->id,
+            'content' => 'required',
             'category_id' => 'required|exists:blog_categories,id',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp',
         ]);
 
         DB::beginTransaction();
@@ -128,7 +195,7 @@ class BlogController extends Controller
                     File::delete(public_path('storage/' . $blog->image));
                 }
 
-                $image     = $request->file('image');
+                $image = $request->file('image');
                 $imageName = uniqid('blog_', true) . '.' . $image->extension();
                 $image->move(public_path('storage/images'), $imageName);
                 $blog->image = 'images/' . $imageName;
@@ -143,10 +210,10 @@ class BlogController extends Controller
             }
 
             $blog->update([
-                'title'       => $request->title,
-                'content'     => $request->content,
+                'title' => $request->title,
+                'content' => $request->content,
                 'category_id' => $request->category_id,
-                'status'      => $request->has('status'),
+                'status' => $request->has('status'),
             ]);
 
             DB::commit();
@@ -177,4 +244,5 @@ class BlogController extends Controller
             ->route('blogs.index')
             ->with('success', 'Blog deleted successfully!');
     }
+
 }

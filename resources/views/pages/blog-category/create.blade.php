@@ -76,7 +76,7 @@
                 </label>
                 <input type="text" name="name" id="name" value=""
                   class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                  placeholder="Enter variant name">
+                  placeholder="Enter category    name">
               </div>
             </div>
           </div>

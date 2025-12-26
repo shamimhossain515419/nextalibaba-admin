@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AttributeController;
+use App\Http\Controllers\BannerProductController;
 use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\FeaturesCategoryController;
@@ -251,6 +252,20 @@ Route::middleware([
 
 
             });
+
+
+//        banner product
+
+        Route::prefix('banners')
+            ->name('banners.')
+            ->group(function () {
+                Route::get('/', [BannerProductController::class, 'index'])
+                    ->name('index');
+                Route::post('/', [BannerProductController::class, 'store'])
+                    ->name('store');
+
+            });
+
 
     });
 

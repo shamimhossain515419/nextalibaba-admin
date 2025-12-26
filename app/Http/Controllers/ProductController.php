@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attribute;
+use App\Models\BannerProduct;
 use App\Models\FeaturesProduct;
 use App\Models\MappingVariant;
 use App\Models\Product;
+use App\Models\TodayHotDeal;
 use Illuminate\Support\Facades\File;
 use App\Models\ProductCategory;
 use App\Models\ProductImage;
@@ -95,6 +97,58 @@ class ProductController extends Controller
             'data' => $products,
         ], 200);
     }
+
+    public function getTodayHotDeal(Request $request)
+    {
+        $products = TodayHotDeal::with(['product','product.category', 'product.primaryImage'])
+            ->get();
+        return response()->json([
+            'success' => true,
+            'message' => 'Get today hots deals successfully',
+            'data' => $products,
+        ], 200);
+    }
+    public function getBanner()
+    {
+        $banner = BannerProduct::with(['product','product.primaryImage', 'product.category'])->first();
+        return response()->json([
+            'success' => true,
+            'message' => 'Banner Products successfully',
+            'data' => $banner,
+        ], 200);
+    }
+
+    public function getTopRateProducts(Request $request)
+    {
+        // Overall top 4 products by price
+        $products = Product::with(['category', 'primaryImage'])
+            ->orderBy('base_price', 'desc')
+            ->take(4)
+            ->get();
+
+        // Get first category safely
+        $category = ProductCategory::first();
+
+        $topProductByCategory = null;
+
+        if ($category) {
+            $topProductByCategory = Product::with(['category', 'primaryImage'])
+                ->where('category_id', $category->id)
+                ->orderBy('base_price', 'asc')
+                ->first(); // single top product
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Get today hot deals successfully',
+            'data' => $products,
+            'topProductByCategory' => $topProductByCategory,
+        ], 200);
+    }
+
+
+
+
 
 
 

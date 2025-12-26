@@ -60,6 +60,11 @@ class MenuHelper
                 'path' => '/dashboard/blogs',
             ],
             [
+                'icon' => 'dashboard',
+                'name' => 'Banner Product',
+                'path' => '/dashboard/banners',
+            ],
+            [
                 'icon' => 'calendar',
                 'name' => 'Calendar',
                 'path' => '/calendar',
