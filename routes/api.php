@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\FeaturesCategoryController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
@@ -30,4 +31,10 @@ Route::get('/get-all-features', [FeaturesCategoryController::class, 'indexWebVie
 
 Route::get('/get-all-blogs', [BlogController::class, 'allBlog']);
 Route::get('/get-all-blog-category', [BlogController::class, 'allBlogCategory']);
+Route::get('/get-blog-by-category/{slug}', [BlogController::class, 'getBlogByCategory']);
 Route::get('/get-single-blog/{slug}', [BlogController::class, 'getSingleProductBySlug']);
+
+
+//order related api
+
+Route::post('/place-order', [OrderController::class, 'placeOrder']);

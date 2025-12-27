@@ -58,7 +58,7 @@ class ProductController extends Controller
     {
         $slug = $request->slug;
         $productCategory= ProductCategory::where('slug', 'bags-baggage')->first();
-        $products = Product::with(['mainTwoImages','category'])->paginate(15);
+        $products = Product::with(['mainTwoImages','category','primaryImage'])->paginate(15);
         return response()->json([
             'success' => true,
             'message' => 'Get product category wise fetched successfully',
@@ -69,8 +69,8 @@ class ProductController extends Controller
 
     public function getProductBySlug(Request $request,$slug)
     {
-        $product = Product::with(['category','images','mappingVariants','mappingVariants.variant','mappingVariants.attribute'])->where('slug',$slug)->first();
-        $relatedProduct = Product::with(['category','mainTwoImages'])
+        $product = Product::with(['category','images','mappingVariants','mappingVariants.variant','mappingVariants.attribute','primaryImage'])->where('slug',$slug)->first();
+        $relatedProduct = Product::with(['category','mainTwoImages','primaryImage'])
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id) // Exclude current product
             ->get();
@@ -87,7 +87,7 @@ class ProductController extends Controller
         $categoryId = $request->category_id;
         $limit = $request->limit ?? 5; // Default to 10 if limit is not provided
 
-        $products = FeaturesProduct::with(['product','product.category', 'product.mainTwoImages'])
+        $products = FeaturesProduct::with(['product','product.category', 'product.mainTwoImages','product.primaryImage'])
             ->where('features_category_id', $categoryId)
             ->paginate($limit);
 

@@ -170,18 +170,19 @@
                             </td>
                             <td class="px-5 py-4 whitespace-nowrap">
                                 @if($product->has_variant === 1)
-                                    <div
-                                        class="text-theme-xs rounded-full px-2 py-0.5 font-medium
-                              bg-success-50 dark:bg-success-500/15 text-success-700 dark:text-success-500">
-                                        Variant
-                                    </div>
-                                @else
                                     <a href="{{ route('inventory.product.variant', $product->id) }}"
                                        class="text-theme-xs inline-flex rounded-full px-3 py-1 font-medium
                              bg-red-50 text-blue-700 hover:bg-red-100
                                 dark:bg-red-500/15 dark:text-blue-500 dark:hover:bg-red-500/25">
-                                        Edit
+                                        Variant click
                                     </a>
+
+                                @else
+                                    <div
+                                        class="text-theme-xs rounded-full px-2 py-0.5 font-medium
+                              bg-success-50 dark:bg-success-500/15 text-success-700 dark:text-success-500">
+                                        UnVariant
+                                    </div>
                                 @endif
                             </td>
 

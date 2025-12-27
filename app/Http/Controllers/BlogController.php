@@ -88,6 +88,30 @@ class BlogController extends Controller
         }
     }
 
+    public function getBlogByCategory($slug)
+    {
+        try {
+            $category = BlogCategory::where('slug', $slug)->firstOrFail();
+            $blogs = Blog::with('category')
+                 ->where('category_id', $category->id)
+                ->where('status', 1)->get();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Blog fetched successfully',
+                'data' => $blogs,
+                'category'=>$category,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong while fetching categories',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 
     /**
      * Store blog
