@@ -14,7 +14,8 @@ class Order extends Model
         'notes',
         'payment_method',
         'customer_id',
-        'status'
+        'status',
+        'invoice'
     ];
 
     public function customer()

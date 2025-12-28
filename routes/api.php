@@ -1,24 +1,28 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\FeaturesCategoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified'
-])->group(function (){
 
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
+// Protected routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/profile', [AuthController::class, 'profile']);
+    Route::post('/update-profile', [AuthController::class, 'updateProfile']);
+    Route::post('/change-password', [AuthController::class, 'changePassword']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/my-orders', [OrderController::class, 'myAllOrders']);
 });
 
 
 Route::get('/get-all-category', [ProductCategoryController::class, 'indexWebView']);
-
 Route::get('/get-product-by-category', [ProductController::class, 'getProductByCategory']);
 Route::get('/get-product-by-slug/{slug}', [ProductController::class, 'getProductBySlug']);
 Route::get('/get-product-by-feature-category', [ProductController::class, 'getProductFeaturesWise']);
@@ -38,3 +42,5 @@ Route::get('/get-single-blog/{slug}', [BlogController::class, 'getSingleProductB
 //order related api
 
 Route::post('/place-order', [OrderController::class, 'placeOrder']);
+Route::get('/get-order/{invoice}', [OrderController::class, 'invoice']);
+

@@ -56,14 +56,19 @@ class OrderController extends Controller
                 'products.*.quantities' => 'required|integer|min:1',
             ]);
 
-            // ✅ 2. Create or get user
-            $user = User::firstOrCreate(
-                ['email' => $request->email],
-                [
-                    'name'     => $request->full_name,
-                    'password' => Hash::make($request->password ?? '12345678'),
-                ]
-            );
+            $user = User::where('email', $request->email)->first();
+            if(!$user) {
+                // ✅ 2. Create or get user
+                $user = User::firstOrCreate(
+                    ['email' => $request->email],
+                    [
+                        'name'     => $request->full_name,
+                        'password' => Hash::make($request->password ?? '12345678'),
+                    ]
+                );
+            }
+
+            ShippingAddress::where('customer_id', $user->id)->delete();
 
             // ✅ 3. Shipping address
             $address = ShippingAddress::create([
@@ -83,6 +88,7 @@ class OrderController extends Controller
             $order = Order::create([
                 'quantity'        => $request->total_quantity,
                 'total'           => $request->total,
+                'invoice'        => Str::uuid(),
                 'shipping_cost'   => $request->shipping_cost,
                 'notes'           => $request->notes,
                 'payment_method'  => $request->payment_method,
@@ -91,16 +97,13 @@ class OrderController extends Controller
 
             // ✅ 5. Order items (OrderLog)
             foreach ($request->products as $product) {
-
                 $note = '';
-
                 if (!empty($product['variantInfo']) && is_array($product['variantInfo'])) {
                     foreach ($product['variantInfo'] as $item) {
                         $note .= $item['variant_name'] . ' : ' . $item['attribute_name'] . ', ';
                     }
                     $note = rtrim($note, ', ');
                 }
-
                 OrderLog::create([
                     'order_id'   => $order->id,
                     'product_id' => $product['id'],
@@ -151,8 +154,43 @@ class OrderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Order $order)
+    public function invoice($invoice)
     {
-        //
+        try{
+            $order = Order::where('invoice', $invoice)->first();
+            $orderLogs = OrderLog::with('product')->where('order_id', $order->id)->get();
+            $user= User::find($order->customer_id);
+            $shipping_address = ShippingAddress::where('customer_id', $user->id)->first();
+             return response()->json([
+                 'success'  => true,
+                 'order'    => $order,
+                 'orderLogs' => $orderLogs,
+                  'user'     => $user,
+                 'shipping_address' => $shipping_address
+             ]);
+
+        }catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+    public function myAllOrders(Request $request)
+    {
+        try{
+            $user =  $request->user();
+            $order = Order::where('customer_id', $user->id)->get();
+            return response()->json([
+                'success'  => true,
+                'order'    => $order,
+            ]);
+
+        }catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

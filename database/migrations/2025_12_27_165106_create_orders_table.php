@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('quantity')->default(1);
             $table->decimal('total')->default(0);
+            $table->string('invoice')->unique();
             $table->decimal('shipping_cost')->default(0);
             $table->text('notes')->nullable();
             $table->string('payment_method'); // cod, stripe, paypal, etc
