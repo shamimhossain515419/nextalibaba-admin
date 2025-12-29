@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CommonController;
 use App\Http\Controllers\FeaturesCategoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductCategoryController;
@@ -19,6 +21,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/change-password', [AuthController::class, 'changePassword']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/my-orders', [OrderController::class, 'myAllOrders']);
+    Route::get('/my-address', [OrderController::class, 'myAddress']);
+    Route::post('/shipping-address', [OrderController::class, 'saveAddress']);
 });
 
 
@@ -44,3 +48,15 @@ Route::get('/get-single-blog/{slug}', [BlogController::class, 'getSingleProductB
 Route::post('/place-order', [OrderController::class, 'placeOrder']);
 Route::get('/get-order/{invoice}', [OrderController::class, 'invoice']);
 
+//common api
+
+Route::get('/about-us', [AboutUsController::class, 'about']);
+
+
+
+Route::get('/disclaimer', [CommonController::class, 'disclaimer']);
+Route::get('/packaging', [CommonController::class, 'packaging']);
+Route::get('/terms-conditions', [CommonController::class, 'conditions']);
+Route::get('/shipping-policy', [CommonController::class, 'shippingPolicy']);
+Route::get('/privacy-policy', [CommonController::class, 'privacyPolicy']);
+Route::get('/return-and-refund', [CommonController::class, 'privacyReturnAndRefund']);

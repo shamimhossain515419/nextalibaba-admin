@@ -76,21 +76,33 @@ class AuthController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'photo' => 'nullable|image|max:2048',
+            'email' => 'required|email|max:255',
+            'current_password' => 'nullable|required_with:password',
+            'password' => 'nullable|min:6|confirmed',
         ]);
 
-        if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('profile-photos', 'public');
-            $user->profile_photo_path = $path;
+        // Update name & email
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        // Password change logic
+        if ($request->filled('password')) {
+            if (!Hash::check($request->current_password, $user->password)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Current password is incorrect',
+                ], 422);
+            }
+
+            $user->password = Hash::make($request->password);
         }
 
-        $user->name = $request->name;
         $user->save();
 
         return response()->json([
-            'message' => 'Profile updated',
-            'user' => $user,
-            'success' =>true,
+            'success' => true,
+            'message' => 'Profile updated successfully',
+            'user' => $user->only(['id', 'name', 'email']),
         ]);
     }
 

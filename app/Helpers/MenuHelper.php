@@ -65,10 +65,41 @@ class MenuHelper
                 'path' => '/dashboard/banners',
             ],
             [
-                'icon' => 'calendar',
-                'name' => 'Calendar',
-                'path' => '/calendar',
+                'icon' => 'dashboard',
+                'name' => 'About Us',
+                'path' => '/dashboard/about-us',
             ],
+            [
+                'icon' => 'dashboard',
+                'name' => 'Disclaimer',
+                'path' => '/dashboard/disclaimer',
+            ],
+            [
+                'icon' => 'dashboard',
+                'name' => 'Packaging',
+                'path' => '/dashboard/packaging',
+            ],
+            [
+                'icon' => 'dashboard',
+                'name' => 'Terms Conditions',
+                'path' => '/dashboard/terms-conditions',
+            ],
+            [
+                'icon' => 'dashboard',
+                'name' => 'Shipping Policy',
+                'path' => '/dashboard/shipping-policy',
+            ],
+            [
+                'icon' => 'dashboard',
+                'name' => 'Privacy policy',
+                'path' => '/dashboard/privacy-policy',
+            ],
+            [
+                'icon' => 'dashboard',
+                'name' => 'Return and refund',
+                'path' => '/dashboard/return-and-refund',
+            ],
+
             [
                 'icon' => 'user-profile',
                 'name' => 'User Profile',

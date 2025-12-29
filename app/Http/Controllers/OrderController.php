@@ -193,4 +193,69 @@ class OrderController extends Controller
             ]);
         }
     }
+
+    public function myAddress(Request $request)
+    {
+        try{
+            $user =  $request->user();
+            $address = ShippingAddress::where('customer_id', $user->id)->first();
+            return response()->json([
+                'success'  => true,
+                'data'    => $address,
+            ]);
+
+        }catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function saveAddress(Request $request)
+    {
+        try {
+            $user = $request->user();
+
+            $validated = $request->validate([
+                'full_name' => 'required|string|max:255',
+                'company'   => 'nullable|string|max:255',
+                'country'   => 'required|string|max:255',
+                'address'   => 'required|string|max:255',
+                'city'      => 'required|string|max:255',
+                'state'     => 'required|string|max:255',
+                'zip'       => 'required|string|max:10',
+                'phone'     => 'required|string|max:20',
+                'email'     => 'required|email|max:255'
+            ]);
+
+            $address = ShippingAddress::updateOrCreate(
+                ['customer_id' => $user->id], // condition
+                [
+                    'full_name' => $validated['full_name'],
+                    'company'   => $validated['company'] ?? null,
+                    'country'   => $validated['country'],
+                    'address'   => $validated['address'],
+                    'city'      => $validated['city'],
+                    'state'     => $validated['state'],
+                    'zip'       => $validated['zip'],
+                    'phone'     => $validated['phone'],
+                    'email'     => $validated['email']
+                ]
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Shipping address saved successfully',
+                'data'    => $address,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 }

@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\BannerProductController;
 use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CommonController;
 use App\Http\Controllers\FeaturesCategoryController;
 use App\Http\Controllers\FeaturesProductController;
 use App\Http\Controllers\ProductCategoryController;
@@ -265,6 +267,71 @@ Route::middleware([
                     ->name('store');
 
             });
+
+        Route::prefix('about-us')
+            ->name('aboutUs.')
+            ->group(function () {
+                Route::get('/', [AboutUsController::class, 'index'])
+                    ->name('index');
+                Route::post('/', [AboutUsController::class, 'store'])
+                    ->name('store');
+
+            });
+
+        Route::prefix('disclaimer')
+            ->name('disclaimer.')
+            ->group(function () {
+                Route::get('/', [CommonController::class, 'indexDisclaimer'])
+                    ->name('index');
+                Route::post('/', [CommonController::class, 'storeDisclaimer'])
+                    ->name('store');
+            });
+
+        Route::prefix('packaging')
+            ->name('packaging.')
+            ->group(function () {
+                Route::get('/', [CommonController::class, 'indexPackaging'])
+                    ->name('index');
+                Route::post('/', [CommonController::class, 'storePackaging'])
+                    ->name('store');
+            });
+        Route::prefix('terms-conditions')
+            ->name('termsConditions.')
+            ->group(function () {
+                Route::get('/', [CommonController::class, 'indexConditions'])
+                    ->name('index');
+                Route::post('/', [CommonController::class, 'storeConditions'])
+                    ->name('store');
+            });
+
+        Route::prefix('shipping-policy')
+            ->name('shippingPolicy.')
+            ->group(function () {
+                Route::get('/', [CommonController::class, 'indexShippingPolicy'])
+                    ->name('index');
+                Route::post('/', [CommonController::class, 'storeShippingPolicy'])
+                    ->name('store');
+            });
+
+
+        Route::prefix('privacy-policy')
+            ->name('privacyPolicy.')
+            ->group(function () {
+                Route::get('/', [CommonController::class, 'indexPrivacyPolicy'])
+                    ->name('index');
+                Route::post('/', [CommonController::class, 'storePrivacyPolicy'])
+                    ->name('store');
+            });
+
+        Route::prefix('return-and-refund')
+            ->name('returnAndRefund.')
+            ->group(function () {
+                Route::get('/', [CommonController::class, 'indexReturnAndRefund'])
+                    ->name('index');
+                Route::post('/', [CommonController::class, 'storeReturnAndRefund'])
+                    ->name('store');
+            });
+
 
 
     });
