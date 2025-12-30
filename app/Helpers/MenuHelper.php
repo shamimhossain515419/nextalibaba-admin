@@ -99,6 +99,12 @@ class MenuHelper
                 'name' => 'Return and refund',
                 'path' => '/dashboard/return-and-refund',
             ],
+            [
+                'icon' => 'dashboard',
+                'name' => 'Marketing Products',
+                'path' => '/dashboard/marketing-product',
+            ],
+
 
             [
                 'icon' => 'user-profile',

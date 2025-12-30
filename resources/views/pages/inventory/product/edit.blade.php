@@ -203,7 +203,7 @@
                                             {{-- DELETE --}}
                                             <button onclick="deleteImage({{ $img->id }})"
                                                     class="absolute top-1 right-1 bg-red-600 text-white h-6 w-6 rounded-full text-xs
-                       hidden group-hover:flex items-center justify-center">
+                                             hidden group-hover:flex items-center justify-center">
                                                 ✕
                                             </button>
 
@@ -211,7 +211,7 @@
                                             @if(!$img->is_primary)
                                                     <button onclick="setPrimary({{ $img->id }})"
                                                         class="absolute bottom-1 right-1 bg-blue-600 text-white text-xs px-2 py-1 rounded
-                           hidden group-hover:block">
+                                                           hidden group-hover:block">
                                                     Set Primary
                                                 </button>
                                             @else

@@ -2,27 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MarketingProduct;
+use App\Http\Controllers\Controller;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class ProductCategoryController extends Controller
+class MarketingProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $categories = ProductCategory::all();
-        return view('pages.inventory.category.show', compact('categories'));
+        $products = MarketingProduct::with('category')->get();
+        return view('pages.marketing-product.show', compact('products'));
     }
     public function indexWebView()
     {
-        $categories = ProductCategory::all();
+        $categories = MarketingProduct::with('category')->get();
+
         return response()->json([
             'success' => true,
-            'message' => 'Marketing Product fetched successfully',
+            'message' => 'Marketing product fetched successfully',
             'data' => $categories
         ], 200);
     }
@@ -35,7 +38,9 @@ class ProductCategoryController extends Controller
         try {
             // 1️⃣ Validate input
             $request->validate([
-                'name' => 'required|string|max:255|unique:product_categories,name',
+                'name' => 'required|string|max:255',
+                'title' => 'required|string|max:255',
+                'category_id' => 'required|string',
                 'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg,webp|max:2048',
             ]);
 
@@ -43,24 +48,23 @@ class ProductCategoryController extends Controller
             $photoPath = null;
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
-                $photoName = uniqid('cat_', true) . '.' . $file->extension();
+                $photoName = uniqid('mp_', true) . '.' . $file->extension();
                 $file->move(public_path('storage/images'), $photoName);
                 $photoPath = 'images/' . $photoName;
             }
             // 3️⃣ Create category
-             ProductCategory::create([
+            MarketingProduct::create([
                 'name' => $request->name,
+                'title' => $request->title,
+                'category_id' => $request->category_id,
                 'image' => $photoPath,
             ]);
 
-
             // 4️⃣ Redirect with success
-            return redirect()->route('inventory.category.index')
-                ->with('success', 'Category added successfully!');
+            return redirect()->route('marketingProduct.index')
+                ->with('success', 'Marketing added successfully!');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Validation errors
-            dd($e->getMessage());
             return redirect()->back()->withErrors($e->errors())->withInput();
         }
     }
@@ -71,7 +75,8 @@ class ProductCategoryController extends Controller
      */
     public function create()
     {
-        return view('pages.inventory.category.create');
+        $categories= ProductCategory::all();
+        return view('pages.marketing-product.create', compact('categories'));
     }
 
     /**
@@ -79,8 +84,9 @@ class ProductCategoryController extends Controller
      */
     public function show($id)
     {
-        $category = ProductCategory::find($id);
-        return view('pages.inventory.category.edit',compact('category'));
+        $categories = ProductCategory::all();
+        $product = MarketingProduct::with('category')->find($id);
+        return view('pages.marketing-product.edit',compact('categories','product'));
     }
 
     /**
@@ -90,31 +96,34 @@ class ProductCategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'title' => 'required|string|max:255',
+            'category_id' => 'required|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg,webp|max:2048',
         ]);
 
-        $category = ProductCategory::findOrFail($id);
+        $marketingProduct = MarketingProduct::findOrFail($id);
 
-        $category->name = $request->name;
-        $category->slug = Str::slug($request->name);
+        $marketingProduct->name = $request->name;
+        $marketingProduct->title = $request->title;
+        $marketingProduct->category_id = $request->category_id;
+
         // Handle image upload
         if ($request->hasFile('image')) {
             // Delete old image if exists
-            if ($category->image && file_exists(public_path($category->image))) {
-                unlink(public_path($category->image));
+            if ($marketingProduct->image && file_exists(public_path($marketingProduct->image))) {
+                unlink(public_path($marketingProduct->image));
             }
-
             // Upload new image
             $image = $request->file('image');
             $imageName = time() . '_' . $image->getClientOriginalName();
             $image->move(public_path('storage/images'), $imageName);
-            $category->image = 'images/' . $imageName;
+            $marketingProduct->image = 'images/' . $imageName;
         }
 
-        $category->save();
+        $marketingProduct->save();
 
-        return redirect()->route('inventory.category.index')
-            ->with('success', 'Category updated successfully!');
+        return redirect()->route('marketingProduct.index')
+            ->with('success', 'Marketing Product updated successfully!');
     }
 
     /**
@@ -123,7 +132,7 @@ class ProductCategoryController extends Controller
     public function destroy($id)
     {
         try {
-            $productCategory = ProductCategory::findOrFail($id);
+            $productCategory = MarketingProduct::findOrFail($id);
             // 🔥 1️⃣ Image থাকলে ফাইল delete করো
             if ($productCategory->image) {
                 $imagePath = public_path('storage/' . $productCategory->image);
@@ -137,13 +146,12 @@ class ProductCategoryController extends Controller
             $productCategory->delete();
 
             // 🔥 3️⃣ Success redirect
-            return redirect()->route('inventory.category.index')
-                ->with('success', 'Category deleted successfully!');
+            return redirect()->route('marketingProduct.index')
+                ->with('success', 'Marketing deleted successfully!');
 
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Something went wrong while deleting category!');
         }
     }
-
 }

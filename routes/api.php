@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\FeaturesCategoryController;
+use App\Http\Controllers\MarketingProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
@@ -35,6 +36,10 @@ Route::get('/get-today-hot-deals', [ProductController::class, 'getTodayHotDeal']
 Route::get('/get-top-pricing', [ProductController::class, 'getTopRateProducts']);
 Route::get('/get-banners', [ProductController::class, 'getBanner']);
 
+Route::get('/get-product-by-search', [ProductController::class, 'getProductBySearch']);
+
+
+
 Route::get('/get-all-features', [FeaturesCategoryController::class, 'indexWebView']);
 
 Route::get('/get-all-blogs', [BlogController::class, 'allBlog']);
@@ -53,10 +58,11 @@ Route::get('/get-order/{invoice}', [OrderController::class, 'invoice']);
 Route::get('/about-us', [AboutUsController::class, 'about']);
 
 
-
 Route::get('/disclaimer', [CommonController::class, 'disclaimer']);
 Route::get('/packaging', [CommonController::class, 'packaging']);
 Route::get('/terms-conditions', [CommonController::class, 'conditions']);
 Route::get('/shipping-policy', [CommonController::class, 'shippingPolicy']);
 Route::get('/privacy-policy', [CommonController::class, 'privacyPolicy']);
 Route::get('/return-and-refund', [CommonController::class, 'privacyReturnAndRefund']);
+
+Route::get('/marketing-product', [MarketingProductController::class, 'indexWebView']);

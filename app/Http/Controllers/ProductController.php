@@ -147,9 +147,27 @@ class ProductController extends Controller
     }
 
 
+    public function getProductBySearch(Request $request)
+    {
+        $search = $request->query('search');
 
+        $products = Product::with(['category', 'mainTwoImages'])
+            ->when($search, function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%")
+                    ->orWhere('description', 'LIKE', "%{$search}%")
+                    ->orWhereHas('category', function ($q) use ($search) {
+                        $q->where('name', 'LIKE', "%{$search}%");
+                    });
+            })
+            ->orderBy('id', 'desc')
+            ->get();
 
-
+        return response()->json([
+            'success' => true,
+            'message' => 'Products fetched successfully',
+            'data' => $products,
+        ], 200);
+    }
 
 
 
@@ -171,6 +189,7 @@ class ProductController extends Controller
                 'stock' => $request->stock,
                 'category_id' => $request->category_id,
                 'sku' => $request->sku,
+                'show_home' => $request->show_home =='on' ? true : false,
                 'has_variant' => $request->variants=='on' ? true : false,
                 'status' => $request->status=='on' ? true : false,
                 'added_by' => $user->id,
@@ -331,6 +350,7 @@ class ProductController extends Controller
                 'stock'       => $request->stock,
                 'category_id' => $request->category_id,
                 'sku'         => $request->sku,
+                'show_home' => $request->show_home ? true : false,
                 'has_variant' => $request->has_variant ? true : false,
                 'status'      => $request->status ? true : false,
             ]);

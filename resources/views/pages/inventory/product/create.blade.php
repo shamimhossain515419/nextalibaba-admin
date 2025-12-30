@@ -168,6 +168,17 @@
                                     Status
                                 </label>
                             </div>
+                            <div x-data="{ switcherToggle1: false }">
+                                <label for="toggle3" class="flex cursor-pointer items-center gap-3 text-sm font-medium text-gray-700 select-none dark:text-gray-400">
+                                    <div class="relative">
+                                        <input type="checkbox"  name="show_home" id="toggle3" class="sr-only" @change="switcherToggle1 = !switcherToggle1">
+                                        <div class="block h-6 w-11 rounded-full bg-brand-500 dark:bg-brand-500" :class="switcherToggle1 ? 'bg-brand-500 dark:bg-brand-500' : 'bg-gray-200 dark:bg-white/10'"></div>
+                                        <div :class="switcherToggle1 ? 'translate-x-full': 'translate-x-0'" class="shadow-theme-sm absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white duration-300 ease-linear translate-x-full"></div>
+                                    </div>
+
+                                    Show home
+                                </label>
+                            </div>
 
                         </div>
                     </div>

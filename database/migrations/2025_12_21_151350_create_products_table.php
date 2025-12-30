@@ -21,6 +21,7 @@ return new class extends Migration
             $table->decimal('base_price', 10, 2)->default(0);
             $table->boolean('has_variant')->default(false);
             $table->boolean('status')->default(true);
+            $table->boolean('show_home')->default(false);
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('added_by');
             $table->timestamps();

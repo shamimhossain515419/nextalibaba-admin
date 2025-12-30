@@ -11,7 +11,7 @@ class Product extends Model
 
     protected $fillable = [
         'name', 'slug', 'description', 'category_id','stock',
-        'base_price', 'has_variant', 'sku', 'status', 'added_by'
+        'base_price', 'has_variant', 'sku', 'status', 'added_by','show_home'
     ];
 
     // Product belongs to user
