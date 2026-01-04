@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL; // ← এটা যোগ করতে হবে
 
 class AppServiceProvider extends ServiceProvider
 {
