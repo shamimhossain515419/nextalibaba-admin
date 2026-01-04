@@ -1,16 +1,16 @@
-# Base image
+# Use official PHP CLI image
 FROM php:8.2-cli
 
-# System dependencies
+# Set working directory
+WORKDIR /var/www
+
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git unzip libzip-dev curl nodejs npm \
     && docker-php-ext-install pdo pdo_mysql zip
 
-# Composer
+# Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-# Set working directory
-WORKDIR /var/www
 
 # Copy project files
 COPY . .
@@ -18,14 +18,16 @@ COPY . .
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Install Node dependencies and build Vite assets
-RUN npm install
-RUN npm run build
-
-# Laravel permissions
+# Set permissions for Laravel storage
 RUN chmod -R 777 storage bootstrap/cache
 
-# Storage link
+# Install Node dependencies
+RUN npm install
+
+# Build Vite assets for production
+RUN npm run build -- --mode production
+
+# Create storage link (optional if already exists)
 RUN php artisan storage:link || true
 
 # Expose port
