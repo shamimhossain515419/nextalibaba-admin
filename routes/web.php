@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\BannerProductController;
@@ -14,6 +13,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TodayHotDealController;
 use App\Http\Controllers\VariantController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::middleware([
     'auth:sanctum',
@@ -31,73 +31,73 @@ Route::middleware([
         Route::prefix('inventory/category')
             ->name('inventory.category.')
             ->group(function () {
-                Route::get('/', [ProductCategoryController::class, 'index'])
-                    ->name('index');
+            Route::get('/', [ProductCategoryController::class, 'index'])
+                ->name('index');
 
-                Route::get('/create-category', [ProductCategoryController::class, 'create'])
-                    ->name('create');
+            Route::get('/create-category', [ProductCategoryController::class, 'create'])
+                ->name('create');
 
-                Route::get('/create-category/{id}', [ProductCategoryController::class, 'show'])
-                    ->name('edit');
+            Route::get('/create-category/{id}', [ProductCategoryController::class, 'show'])
+                ->name('edit');
 
-                Route::delete('/create-category/{id}', [ProductCategoryController::class, 'destroy'])
-                    ->name('destroy');
+            Route::delete('/create-category/{id}', [ProductCategoryController::class, 'destroy'])
+                ->name('destroy');
 
-                Route::post('/', [ProductCategoryController::class, 'store'])
-                    ->name('store');
+            Route::post('/', [ProductCategoryController::class, 'store'])
+                ->name('store');
 
-                Route::put('/{id}', [ProductCategoryController::class, 'update'])
-                    ->name('update');
-            });
+            Route::put('/{id}', [ProductCategoryController::class, 'update'])
+                ->name('update');
+        });
 
         // Inventory - Category
         Route::prefix('inventory/product')
             ->name('inventory.product.')
             ->group(function () {
-                Route::get('/', [ProductController::class, 'index'])
-                    ->name('index');
+            Route::get('/', [ProductController::class, 'index'])
+                ->name('index');
 
-                Route::get('/create-product', [ProductController::class, 'create'])
-                    ->name('create');
+            Route::get('/create-product', [ProductController::class, 'create'])
+                ->name('create');
 
-                Route::get('/variant/{id}', [ProductController::class, 'variant'])
-                    ->name('variant');
+            Route::get('/variant/{id}', [ProductController::class, 'variant'])
+                ->name('variant');
 
-                Route::post('/variant/store', [ProductController::class, 'variantStore'])
-                    ->name('variantStore');
+            Route::post('/variant/store', [ProductController::class, 'variantStore'])
+                ->name('variantStore');
 
-                Route::get('/create-product/{id}', [ProductController::class, 'show'])
-                    ->name('edit');
+            Route::get('/create-product/{id}', [ProductController::class, 'show'])
+                ->name('edit');
 
-                Route::delete('/create-product/{id}', [ProductController::class, 'destroy'])
-                    ->name('destroy');
+            Route::delete('/create-product/{id}', [ProductController::class, 'destroy'])
+                ->name('destroy');
 
-                Route::post('/', [ProductController::class, 'store'])
-                    ->name('store');
+            Route::post('/', [ProductController::class, 'store'])
+                ->name('store');
 
-                Route::patch('/{id}', [ProductController::class, 'update'])
-                    ->name('update');
-                Route::delete('variant/{id}', [ProductController::class, 'destroyVariant'])
-                    ->name('destroyVariant');
+            Route::patch('/{id}', [ProductController::class, 'update'])
+                ->name('update');
+            Route::delete('variant/{id}', [ProductController::class, 'destroyVariant'])
+                ->name('destroyVariant');
 
-                Route::put('variant/{id}', [ProductController::class, 'variantUpdate'])
-                    ->name('variantUpdate');
+            Route::put('variant/{id}', [ProductController::class, 'variantUpdate'])
+                ->name('variantUpdate');
 
-                Route::get('get-attributes/{variantId}', [ProductController::class, 'getAttributesByVariant'])
-                    ->name('inventory.product.getAttributes');
+            Route::get('get-attributes/{variantId}', [ProductController::class, 'getAttributesByVariant'])
+                ->name('inventory.product.getAttributes');
 
-                Route::delete('destroy-image/{id}', [ProductController::class, 'destroyImage'])
-                    ->name('destroyImage');
+            Route::delete('destroy-image/{id}', [ProductController::class, 'destroyImage'])
+                ->name('destroyImage');
 
-                Route::post('set-primary/{id}', [ProductController::class, 'setPrimary'])
-                    ->name('primary');
+            Route::post('set-primary/{id}', [ProductController::class, 'setPrimary'])
+                ->name('primary');
 
-            });
+        });
 
 
 
         // Variant related api
-
+    
         Route::prefix('variants')
             ->name('variants.')
             ->group(function () {
@@ -273,8 +273,8 @@ Route::middleware([
             });
 
 
-//        banner product
-
+        //        banner product
+    
         Route::prefix('banners')
             ->name('banners.')
             ->group(function () {
@@ -350,3 +350,8 @@ Route::middleware([
             });
 
     });
+
+
+Route::get('/', action: function () {
+    return view('welcome');
+});
