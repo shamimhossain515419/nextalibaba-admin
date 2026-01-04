@@ -14,11 +14,14 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 
-    /**
+     /**
      * Bootstrap any application services.
      */
     public function boot(): void
     {
-        //
+        // HTTPS force করার জন্য
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
     }
 }
