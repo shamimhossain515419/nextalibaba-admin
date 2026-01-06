@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\AttributeController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BannerProductController;
 use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\BlogController;
@@ -24,8 +25,16 @@ Route::middleware([
     ->group(function () {
 
         // Dashboard
-        Route::get('/', fn() => view('pages.dashboard.ecommerce'))
+
+        Route::get('/', [AuthController::class, 'dashboard'])
             ->name('dashboard');
+
+        Route::get('/profile', [AuthController::class, 'webProfile'])
+            ->name('profile');
+        Route::post('/update-profile', [AuthController::class, 'webUpdateProfile'])
+            ->name('updateProfile');
+        Route::post('/remove-avatar', [AuthController::class, 'removeAvatar'])
+            ->name('removeAvatar');
 
         // Inventory - Category
         Route::prefix('inventory/category')
@@ -97,7 +106,7 @@ Route::middleware([
 
 
         // Variant related api
-    
+
         Route::prefix('variants')
             ->name('variants.')
             ->group(function () {
@@ -274,7 +283,7 @@ Route::middleware([
 
 
         //        banner product
-    
+
         Route::prefix('banners')
             ->name('banners.')
             ->group(function () {
@@ -348,6 +357,10 @@ Route::middleware([
                 Route::post('/', [CommonController::class, 'storeReturnAndRefund'])
                     ->name('store');
             });
+
+
+        Route::post('/logout-web', action: [AuthController::class, 'logoutWeb'])
+            ->name('logoutWeb');
 
     });
 

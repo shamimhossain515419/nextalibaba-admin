@@ -60,6 +60,7 @@
         'xl:justify-center' :
         'justify-start'">
         <a href={{route('dashboard')}} class="flex items-center gap-2">
+
             <img x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
                 class="dark:hidden" src="/images/logo/logo.svg" alt="Logo" width="150" height="40" />
             <img x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
