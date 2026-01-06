@@ -353,5 +353,5 @@ Route::middleware([
 
 
 Route::get('/', action: function () {
-    return view('welcome');
+    return  DB::connection()->getMongoClient();
 });

@@ -1,10 +1,22 @@
 # Base image
 FROM php:8.2-cli
 
-# System dependencies
+# System dependencies এবং MongoDB Extension এর জন্য প্রয়োজনীয় লাইব্রেরি
 RUN apt-get update && apt-get install -y \
-    git unzip libzip-dev curl nodejs npm \
-    && docker-php-ext-install pdo pdo_mysql zip
+    git \
+    unzip \
+    libzip-dev \
+    curl \
+    nodejs \
+    npm \
+    libcurl4-openssl-dev \
+    pkg-config \
+    libssl-dev \
+    && docker-php-ext-install zip
+
+# MongoDB PHP Extension ইন্সটল করা
+RUN pecl install mongodb \
+    && docker-php-ext-enable mongodb
 
 # Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer

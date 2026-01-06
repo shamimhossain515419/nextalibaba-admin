@@ -1,3 +1,7 @@
 node_modules
 vendor
 .env
+.git
+storage/*.key
+public/storage
+bootstrap/cache/*

@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 
 class ProductCategory extends Model
 {
     use HasFactory;
+     protected $connection = 'mongodb';
+    protected $collection = 'product_categories';
 
     // Mass assignable fields
     protected $fillable = [
